@@ -187,8 +187,9 @@ int GetTrendDirection(int handle)
 {
     double kumo_a[1], kumo_b[1];
 
-    if (CopyBuffer(handle, ICHIMOKU_SENKOU_SPAN_A, 0, 1, kumo_a) <= 0 ||
-        CopyBuffer(handle, ICHIMOKU_SENKOU_SPAN_B, 0, 1, kumo_b) <= 0)
+    // Buffer indices: 0=Tenkan, 1=Kijun, 2=Senkou A, 3=Senkou B, 4=Chikou
+    if (CopyBuffer(handle, 2, 0, 1, kumo_a) <= 0 ||
+        CopyBuffer(handle, 3, 0, 1, kumo_b) <= 0)
     {
         return(0);
     }
@@ -209,8 +210,9 @@ int GetEntrySignal(int handle)
     double close_price[1];
 
     // Get current and previous values (indices 0 and 1)
-    if (CopyBuffer(handle, ICHIMOKU_TENKAN_SEN, 0, 2, tenkan_sen_buffer) <= 0 ||
-        CopyBuffer(handle, ICHIMOKU_KIJUN_SEN, 0, 2, kijun_sen_buffer) <= 0 ||
+    // Buffer indices: 0=Tenkan, 1=Kijun, 2=Senkou A, 3=Senkou B, 4=Chikou
+    if (CopyBuffer(handle, 0, 0, 2, tenkan_sen_buffer) <= 0 ||
+        CopyBuffer(handle, 1, 0, 2, kijun_sen_buffer) <= 0 ||
         CopyClose(_Symbol, _Period, 0, 1, close_price) <= 0)
     {
         return(0);
@@ -248,8 +250,8 @@ int GetChikouFilter(int handle)
     double chikou_span[1];
     double price_ahead[1]; // Price that was 26 periods ahead (now current)
 
-    // Get Chikou Span at current bar
-    if (CopyBuffer(handle, ICHIMOKU_CHIKOU_SPAN, 0, 1, chikou_span) <= 0)
+    // Get Chikou Span at current bar (buffer index 4)
+    if (CopyBuffer(handle, 4, 0, 1, chikou_span) <= 0)
     {
         return(0);
     }
@@ -330,11 +332,11 @@ void ExecuteTrade(ENUM_ORDER_TYPE type, int magic)
     double bid_price = SymbolInfoDouble(_Symbol, SYMBOL_BID);
     double entry_price = (type == ORDER_TYPE_BUY) ? ask_price : bid_price;
 
-    // Calculate Dynamic SL based on Kijun-Sen
+    // Calculate Dynamic SL based on Kijun-Sen (buffer index 1)
     double kijun_current[1];
     double stop_loss = 0;
 
-    if (CopyBuffer(ichimoku_handle, ICHIMOKU_KIJUN_SEN, 0, 1, kijun_current) <= 0)
+    if (CopyBuffer(ichimoku_handle, 1, 0, 1, kijun_current) <= 0)
     {
         Print("Failed to get Kijun-Sen for Dynamic SL. Aborting trade.");
         return;
