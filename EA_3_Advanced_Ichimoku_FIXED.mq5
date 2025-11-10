@@ -209,8 +209,8 @@ int GetEntrySignal(int handle)
     double close_price[1];
 
     // Get current and previous values (indices 0 and 1)
-    if (CopyBuffer(handle, ICHIMOKU_TENKAN, 0, 2, tenkan_sen_buffer) <= 0 ||
-        CopyBuffer(handle, ICHIMOKU_KIJUN, 0, 2, kijun_sen_buffer) <= 0 ||
+    if (CopyBuffer(handle, ICHIMOKU_TENKAN_SEN, 0, 2, tenkan_sen_buffer) <= 0 ||
+        CopyBuffer(handle, ICHIMOKU_KIJUN_SEN, 0, 2, kijun_sen_buffer) <= 0 ||
         CopyClose(_Symbol, _Period, 0, 1, close_price) <= 0)
     {
         return(0);
@@ -249,7 +249,7 @@ int GetChikouFilter(int handle)
     double price_ahead[1]; // Price that was 26 periods ahead (now current)
 
     // Get Chikou Span at current bar
-    if (CopyBuffer(handle, ICHIMOKU_CHIKOU, 0, 1, chikou_span) <= 0)
+    if (CopyBuffer(handle, ICHIMOKU_CHIKOU_SPAN, 0, 1, chikou_span) <= 0)
     {
         return(0);
     }
@@ -334,7 +334,7 @@ void ExecuteTrade(ENUM_ORDER_TYPE type, int magic)
     double kijun_current[1];
     double stop_loss = 0;
 
-    if (CopyBuffer(ichimoku_handle, ICHIMOKU_KIJUN, 0, 1, kijun_current) <= 0)
+    if (CopyBuffer(ichimoku_handle, ICHIMOKU_KIJUN_SEN, 0, 1, kijun_current) <= 0)
     {
         Print("Failed to get Kijun-Sen for Dynamic SL. Aborting trade.");
         return;
@@ -354,7 +354,7 @@ void ExecuteTrade(ENUM_ORDER_TYPE type, int magic)
     }
 
     // Validate SL is not too close
-    double min_sl_distance = SymbolInfoDouble(_Symbol, SYMBOL_TRADE_STOPS_LEVEL) * point_value;
+    double min_sl_distance = SymbolInfoInteger(_Symbol, SYMBOL_TRADE_STOPS_LEVEL) * point_value;
     double sl_distance = MathAbs(entry_price - stop_loss);
 
     if (sl_distance < min_sl_distance)
