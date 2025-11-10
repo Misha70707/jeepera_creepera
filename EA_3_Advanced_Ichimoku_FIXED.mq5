@@ -144,6 +144,7 @@ void CheckForTradeSignal()
     int trend_direction = GetTrendDirection(ichimoku_trend_handle);
     if (trend_direction == 0) // Neutral trend
     {
+        Print("DEBUG: Trend is neutral, no trade signal");
         return;
     }
 
@@ -151,6 +152,7 @@ void CheckForTradeSignal()
     int entry_signal = GetEntrySignal(ichimoku_handle);
     if (entry_signal == 0)
     {
+        Print("DEBUG: No Tenkan/Kijun crossover detected");
         return;
     }
 
@@ -161,6 +163,7 @@ void CheckForTradeSignal()
         chikou_filter = GetChikouFilter(ichimoku_handle);
         if (chikou_filter == 0) // Chikou filter failed
         {
+            Print("DEBUG: Chikou filter mismatch or failed to get data");
             return;
         }
     }
@@ -170,6 +173,8 @@ void CheckForTradeSignal()
     }
 
     //--- 4. Execute Trade based on confluence
+    PrintFormat("DEBUG: Trend=%d, EntrySignal=%d, ChikouFilter=%d", trend_direction, entry_signal, chikou_filter);
+
     if (entry_signal == 1 && trend_direction == 1 && chikou_filter == 1) // Buy Signal + Uptrend + Chikou OK
     {
         ExecuteTrade(ORDER_TYPE_BUY, MagicNumber);
@@ -177,6 +182,10 @@ void CheckForTradeSignal()
     else if (entry_signal == -1 && trend_direction == -1 && chikou_filter == -1) // Sell Signal + Downtrend + Chikou OK
     {
         ExecuteTrade(ORDER_TYPE_SELL, MagicNumber);
+    }
+    else
+    {
+        Print("DEBUG: Signals don't match (no confluence)");
     }
 }
 
@@ -263,16 +272,21 @@ int GetChikouFilter(int handle)
     }
 
     // Chikou Span > Price 26 bars ago = Bullish (buy filter OK)
+    PrintFormat("DEBUG Chikou: Current=%.5f, 26BarsAgo=%.5f", chikou_span[0], price_ahead[0]);
+
     if (chikou_span[0] > price_ahead[0])
     {
+        Print("DEBUG: Chikou bullish");
         return(1);
     }
     // Chikou Span < Price 26 bars ago = Bearish (sell filter OK)
     else if (chikou_span[0] < price_ahead[0])
     {
+        Print("DEBUG: Chikou bearish");
         return(-1);
     }
 
+    Print("DEBUG: Chikou neutral");
     return(0);
 }
 
