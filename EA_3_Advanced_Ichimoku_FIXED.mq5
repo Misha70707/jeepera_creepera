@@ -302,14 +302,26 @@ double CalculatePositionSize(double entry_price, double stop_loss_price)
 
     double account_balance = AccountInfoDouble(ACCOUNT_BALANCE);
     double risk_amount = account_balance * (RiskPercent / 100.0);
-    double price_difference = MathAbs(entry_price - stop_loss_price);
 
-    if (price_difference <= 0)
+    // Calculate distance in PIPS (not price)
+    double price_difference = MathAbs(entry_price - stop_loss_price);
+    double pip_distance = price_difference / point_value;
+
+    if (pip_distance <= 0)
     {
+        Print("Invalid SL distance");
         return 0.01; // Fallback minimum
     }
 
-    double position_size = risk_amount / price_difference;
+    // Get pip value for this symbol (how much $1 movement in pips = ?)
+    double contract_size = SymbolInfoDouble(_Symbol, SYMBOL_TRADE_CONTRACT_SIZE);
+    double pip_value = (point_value * contract_size) / 100; // Typical pip value
+
+    // Position size = Risk Amount / (Pip Distance * Pip Value per lot)
+    double position_size = risk_amount / (pip_distance * pip_value);
+
+    PrintFormat("DEBUG Position Sizing: Balance=%.2f, RiskAmount=%.2f, PipDistance=%.1f, PipValue=%.2f, CalcSize=%.2f",
+                account_balance, risk_amount, pip_distance, pip_value, position_size);
 
     // Get symbol lot step and limits
     double lot_step = SymbolInfoDouble(_Symbol, SYMBOL_VOLUME_STEP);
@@ -322,6 +334,8 @@ double CalculatePositionSize(double entry_price, double stop_loss_price)
     // Ensure within limits
     if (position_size < min_lot) position_size = min_lot;
     if (position_size > max_lot) position_size = max_lot;
+
+    PrintFormat("DEBUG Final Position Size: %.2f lots (min=%.2f, max=%.2f)", position_size, min_lot, max_lot);
 
     return position_size;
 }
