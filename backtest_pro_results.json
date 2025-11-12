@@ -1,0 +1,220 @@
+{
+  "timestamp": "2025-11-12T08:38:42.879541",
+  "results": {
+    "initial_balance": 10000,
+    "final_balance": 9400.48,
+    "total_return_percent": -6.0,
+    "total_trades": 19,
+    "winning_trades": 6,
+    "losing_trades": 13,
+    "win_rate": 31.58,
+    "avg_win": 314.99,
+    "avg_loss": 191.5,
+    "profit_factor": 0.76,
+    "expectancy": -31.55,
+    "sharpe_ratio": -1.8,
+    "sortino_ratio": -10,
+    "max_drawdown": 1318.74,
+    "max_drawdown_percent": 13.19,
+    "consecutive_wins": 4,
+    "consecutive_losses": 7,
+    "best_trade": 378.75,
+    "worst_trade": -201.21,
+    "smart_exit_trades": 1,
+    "breakeven_protected": 0,
+    "trending_market_trades": 0,
+    "choppy_market_avoided": 0
+  },
+  "trades": [
+    {
+      "entry_time": 21,
+      "entry_price": 1.09901,
+      "exit_time": 36,
+      "exit_price": 1.10071,
+      "type": "SELL",
+      "profit_loss": -200.0,
+      "return_percent": -2.0,
+      "exit_reason": "SL"
+    },
+    {
+      "entry_time": 37,
+      "entry_price": 1.10093,
+      "exit_time": 53,
+      "exit_price": 1.10362,
+      "type": "SELL",
+      "profit_loss": -196.0,
+      "return_percent": -2.0,
+      "exit_reason": "SL"
+    },
+    {
+      "entry_time": 54,
+      "entry_price": 1.10495,
+      "exit_time": 61,
+      "exit_price": 1.1074,
+      "type": "SELL",
+      "profit_loss": -192.08,
+      "return_percent": -2.0,
+      "exit_reason": "SL"
+    },
+    {
+      "entry_time": 62,
+      "entry_price": 1.10819,
+      "exit_time": 101,
+      "exit_price": 1.11236,
+      "type": "SELL",
+      "profit_loss": -188.24,
+      "return_percent": -2.0,
+      "exit_reason": "SL"
+    },
+    {
+      "entry_time": 102,
+      "entry_price": 1.11322,
+      "exit_time": 121,
+      "exit_price": 1.11549,
+      "type": "SELL",
+      "profit_loss": -184.47,
+      "return_percent": -2.0,
+      "exit_reason": "SL"
+    },
+    {
+      "entry_time": 122,
+      "entry_price": 1.11723,
+      "exit_time": 133,
+      "exit_price": 1.12082,
+      "type": "SELL",
+      "profit_loss": -180.78,
+      "return_percent": -2.0,
+      "exit_reason": "SL"
+    },
+    {
+      "entry_time": 134,
+      "entry_price": 1.12136,
+      "exit_time": 159,
+      "exit_price": 1.12483,
+      "type": "SELL",
+      "profit_loss": -177.17,
+      "return_percent": -2.0,
+      "exit_reason": "SL"
+    },
+    {
+      "entry_time": 169,
+      "entry_price": 1.12597,
+      "exit_time": 203,
+      "exit_price": 1.13015,
+      "type": "BUY",
+      "profit_loss": 347.25,
+      "return_percent": 4.0,
+      "exit_reason": "TP"
+    },
+    {
+      "entry_time": 204,
+      "entry_price": 1.13037,
+      "exit_time": 217,
+      "exit_price": 1.13464,
+      "type": "BUY",
+      "profit_loss": 361.14,
+      "return_percent": 4.0,
+      "exit_reason": "TP"
+    },
+    {
+      "entry_time": 218,
+      "entry_price": 1.13633,
+      "exit_time": 271,
+      "exit_price": 1.1418,
+      "type": "BUY",
+      "profit_loss": 375.59,
+      "return_percent": 4.0,
+      "exit_reason": "TP"
+    },
+    {
+      "entry_time": 273,
+      "entry_price": 1.14336,
+      "exit_time": 329,
+      "exit_price": 1.14711,
+      "type": "BUY",
+      "profit_loss": 295.14,
+      "return_percent": 3.02,
+      "exit_reason": "REVERSAL"
+    },
+    {
+      "entry_time": 330,
+      "entry_price": 1.14701,
+      "exit_time": 358,
+      "exit_price": 1.15124,
+      "type": "SELL",
+      "profit_loss": -201.21,
+      "return_percent": -2.0,
+      "exit_reason": "SL"
+    },
+    {
+      "entry_time": 359,
+      "entry_price": 1.15221,
+      "exit_time": 386,
+      "exit_price": 1.15638,
+      "type": "SELL",
+      "profit_loss": -197.18,
+      "return_percent": -2.0,
+      "exit_reason": "SL"
+    },
+    {
+      "entry_time": 387,
+      "entry_price": 1.15726,
+      "exit_time": 409,
+      "exit_price": 1.16195,
+      "type": "SELL",
+      "profit_loss": -193.24,
+      "return_percent": -2.0,
+      "exit_reason": "SL"
+    },
+    {
+      "entry_time": 410,
+      "entry_price": 1.16179,
+      "exit_time": 435,
+      "exit_price": 1.15824,
+      "type": "SELL",
+      "profit_loss": 378.75,
+      "return_percent": 4.0,
+      "exit_reason": "TP"
+    },
+    {
+      "entry_time": 437,
+      "entry_price": 1.15806,
+      "exit_time": 441,
+      "exit_price": 1.16082,
+      "type": "SELL",
+      "profit_loss": -196.95,
+      "return_percent": -2.0,
+      "exit_reason": "SL"
+    },
+    {
+      "entry_time": 442,
+      "entry_price": 1.16123,
+      "exit_time": 457,
+      "exit_price": 1.16622,
+      "type": "SELL",
+      "profit_loss": -193.01,
+      "return_percent": -2.0,
+      "exit_reason": "SL"
+    },
+    {
+      "entry_time": 458,
+      "entry_price": 1.16606,
+      "exit_time": 473,
+      "exit_price": 1.17109,
+      "type": "SELL",
+      "profit_loss": -189.15,
+      "return_percent": -2.0,
+      "exit_reason": "SL"
+    },
+    {
+      "entry_time": 479,
+      "entry_price": 1.17401,
+      "exit_time": 499,
+      "exit_price": 1.17686,
+      "type": "BUY",
+      "profit_loss": 132.1,
+      "return_percent": 1.43,
+      "exit_reason": "END"
+    }
+  ]
+}
