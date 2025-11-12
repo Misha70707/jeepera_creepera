@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=VECTORUM EA Backtester
+Comment=Professional EA backtesting framework with GUI
+Exec=bash -c 'cd "$(dirname "%k")" && python3 backtester_gui.py'
+Icon=application-x-executable
+Categories=Finance;Utility;
+Terminal=false
