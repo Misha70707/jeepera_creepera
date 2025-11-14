@@ -17,11 +17,11 @@ input int    TenkanSen = 9;          // Tenkan-sen period
 input int    KijunSen = 26;          // Kijun-sen period
 input int    SenkouSpanB = 52;       // Senkou Span B period
 input int    RiskRewardRatio = 2;    // Risk:Reward ratio for TP calculation
-input int    MaxSpreadsPointsAllowed = 20; // Max spread to allow trades (in points)
+input int    MaxSpreadsPointsAllowed = 50; // Max spread to allow trades (in points)
 input int    TrailingStopPips = 150; // Trailing Stop in points
 input int    BreakEvenPips = 100;    // Profit in points to move to Break-Even
 input int    MaxOpenPositions = 2;   // Maximum concurrent positions
-input bool   UseChikouFilter = true; // Enable Chikou Span filter
+input bool   UseChikouFilter = false; // Enable Chikou Span filter (disabled for more trades)
 
 //--- Global variables
 int ichimoku_handle;
@@ -232,16 +232,28 @@ int GetEntrySignal(int handle)
     double kijun_current = kijun_sen_buffer[0];
     double kijun_previous = kijun_sen_buffer[1];
 
-    // Buy Signal: Tenkan crosses above Kijun AND close is above Kijun
-    if (tenkan_previous <= kijun_previous && tenkan_current > kijun_current && close_price[0] > kijun_current)
+    // Buy Signal: Tenkan above Kijun (more lenient than exact crossover)
+    // Either: Exact crossover OR Tenkan clearly above Kijun
+    if ((tenkan_previous <= kijun_previous && tenkan_current > kijun_current) ||
+        (tenkan_current > kijun_current && tenkan_current > (kijun_current * 1.0002)))
     {
-        return(1);
+        if (close_price[0] > kijun_current)
+        {
+            PrintFormat("BUY SIGNAL: Tenkan=%.5f > Kijun=%.5f, Close=%.5f", tenkan_current, kijun_current, close_price[0]);
+            return(1);
+        }
     }
 
-    // Sell Signal: Tenkan crosses below Kijun AND close is below Kijun
-    if (tenkan_previous >= kijun_previous && tenkan_current < kijun_current && close_price[0] < kijun_current)
+    // Sell Signal: Tenkan below Kijun (more lenient than exact crossover)
+    // Either: Exact crossover OR Tenkan clearly below Kijun
+    if ((tenkan_previous >= kijun_previous && tenkan_current < kijun_current) ||
+        (tenkan_current < kijun_current && tenkan_current < (kijun_current * 0.9998)))
     {
-        return(-1);
+        if (close_price[0] < kijun_current)
+        {
+            PrintFormat("SELL SIGNAL: Tenkan=%.5f < Kijun=%.5f, Close=%.5f", tenkan_current, kijun_current, close_price[0]);
+            return(-1);
+        }
     }
 
     return(0);
