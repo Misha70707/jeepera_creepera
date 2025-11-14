@@ -19,7 +19,7 @@ input double     VolatilityMultiplier = 1.5; // Stop distance = ATR * this
 input int        MaxOpenPositions = 1;       // Max concurrent positions
 input int        MagicNumber = 77777;        // Magic number
 input bool       UseSmartExits = true;       // Enable smart exits
-input bool       UseMarketDetector = true;   // Enable market detector
+input bool       UseMarketDetector = false;  // Enable market detector (DISABLED for now - use simpler logic)
 input int        BreakevenProfitPips = 10;   // Profit to move to breakeven
 input double     TrailingStopPercent = 0.5;  // Trailing % of risk
 input int        MaxConsecutiveLosses = 3;   // Stop after X losses
@@ -137,8 +137,8 @@ MARKET_CONDITION DetectMarketCondition()
         if (i > 0)
         {
             double tr = MathMax(high_array[i] - low_array[i],
-                               MathMax(MathAbs(high_array[i] - close_array[i+1]),
-                                      MathAbs(low_array[i] - close_array[i+1])));
+                               MathMax(MathAbs(high_array[i] - close_array[i-1]),
+                                      MathAbs(low_array[i] - close_array[i-1])));
             true_range += tr;
         }
     }
@@ -210,7 +210,7 @@ void CheckForTradeSignal(MARKET_CONDITION market)
     }
 
     double vector_mag = GetVectorMagnitude(rsi[0], macd_line[0], stoch[0]);
-    if (vector_mag < VectorMagnitudeThreshold)
+    if (vector_mag < 0.40)  // Much more lenient (was 0.65)
         return;
 
     int signal = GetSignalDirection(rsi[0], macd_line[0], macd_signal[0], stoch[0]);
