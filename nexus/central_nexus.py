@@ -71,15 +71,36 @@ class CentralNexus:
 
     def _init_ai_client(self) -> None:
         """Initialize the AI client based on configuration."""
-        provider = self.config.get("ai.provider", "anthropic")
+        provider = self.config.get("ai.provider", "ollama")
 
-        if provider == "anthropic":
+        if provider == "ollama":
+            # Use local Ollama (FREE!)
+            try:
+                import ollama
+                self.ai_client = ollama
+                self.model = self.config.get("ai.ollama_model", "deepseek-coder:6.7b")
+                self.provider_type = "ollama"
+                logger.info(f"🚀 AI client initialized: Ollama (LOCAL & FREE!) - Model: {self.model}")
+            except ImportError:
+                logger.error("Ollama not installed! Run: pip install ollama")
+                raise ImportError("Please install ollama: pip install ollama")
+
+        elif provider == "anthropic":
             api_key = self.config.get_api_key("anthropic")
             self.ai_client = Anthropic(api_key=api_key)
-            self.model = self.config.get("ai.model", "claude-sonnet-4-5-20250929")
+            self.model = self.config.get("ai.anthropic_model", "claude-sonnet-4-5-20250929")
+            self.provider_type = "anthropic"
+            logger.info(f"AI client initialized: Anthropic - Model: {self.model}")
+
         elif provider == "openai":
-            # OpenAI support can be added here
-            raise NotImplementedError("OpenAI provider not yet implemented")
+            from openai import OpenAI
+            api_key = self.config.get_env("OPENAI_API_KEY")
+            if not api_key:
+                raise ValueError("OPENAI_API_KEY not found in environment")
+            self.ai_client = OpenAI(api_key=api_key)
+            self.model = self.config.get("ai.openai_model", "gpt-4o")
+            self.provider_type = "openai"
+            logger.info(f"AI client initialized: OpenAI - Model: {self.model}")
         else:
             raise ValueError(f"Unsupported AI provider: {provider}")
 
@@ -160,14 +181,36 @@ You think in terms of systems, markets, and continuous improvement."""
         logger.info("Generating response from AI")
 
         try:
-            response = self.ai_client.messages.create(
-                model=self.model,
-                max_tokens=self.config.get("ai.max_tokens", 4096),
-                temperature=self.config.get("ai.temperature", 0.7),
-                messages=llm_context,
-            )
+            # Handle different providers
+            if self.provider_type == "ollama":
+                # Use Ollama (local, free!)
+                response = self.ai_client.chat(
+                    model=self.model,
+                    messages=llm_context,
+                )
+                assistant_message = response['message']['content']
 
-            assistant_message = response.content[0].text
+            elif self.provider_type == "anthropic":
+                # Use Anthropic API
+                response = self.ai_client.messages.create(
+                    model=self.model,
+                    max_tokens=self.config.get("ai.max_tokens", 4096),
+                    temperature=self.config.get("ai.temperature", 0.7),
+                    messages=llm_context,
+                )
+                assistant_message = response.content[0].text
+
+            elif self.provider_type == "openai":
+                # Use OpenAI API
+                response = self.ai_client.chat.completions.create(
+                    model=self.model,
+                    messages=llm_context,
+                    max_tokens=self.config.get("ai.max_tokens", 4096),
+                    temperature=self.config.get("ai.temperature", 0.7),
+                )
+                assistant_message = response.choices[0].message.content
+            else:
+                raise ValueError(f"Unknown provider type: {self.provider_type}")
 
             # Add assistant response to context
             self.context_manager.add_message("assistant", assistant_message)
