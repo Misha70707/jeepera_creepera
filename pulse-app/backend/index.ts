@@ -1,6 +1,6 @@
-import * as functions from "firebase-functions";
-import * as admin from "firebase-admin";
-import {Timestamp} from "firebase-admin/firestore";
+import * as functions from 'firebase-functions';
+import * as admin from 'firebase-admin';
+import * as cors from 'cors';
 
 // Initialize Firebase Admin SDK
 admin.initializeApp();
@@ -8,438 +8,337 @@ admin.initializeApp();
 const db = admin.firestore();
 const auth = admin.auth();
 
-// MARK: - Type Definitions
+// CORS enabled for API calls
+const corsHandler = cors({ origin: true });
 
-interface User {
-  id: string;
-  name: string;
-  email: string;
-  avatar?: string;
-  bio?: string;
-  joinedTribes: string[];
-  createdAt: Timestamp;
-  preferences: UserPreferences;
-}
-
-interface UserPreferences {
-  notificationFrequency: "gentle" | "balanced" | "assertive";
-  notificationStyle: "textAndEmojiAndSound" | "textAndEmoji" | "silent";
-  darkMode: boolean;
-  soundEnabled: boolean;
-  doNotDisturbStart?: Timestamp;
-  doNotDisturbEnd?: Timestamp;
-}
-
-interface Routine {
-  id: string;
-  name: string;
-  description?: string;
-  emoji: string;
-  tasks: RoutineTask[];
-  schedule: "daily" | "weekdays" | "weekends" | "weekly" | "custom";
-  startTime?: Timestamp;
-  estimatedDuration: number;
-  isActive: boolean;
-  createdAt: Timestamp;
-  updatedAt: Timestamp;
-}
-
-interface RoutineTask {
-  id: string;
-  name: string;
-  description?: string;
-  estimatedDuration?: number;
-  isCompleted: boolean;
-  completedAt?: Timestamp;
-  order: number;
-}
-
-interface Post {
-  id: string;
-  authorId: string;
-  author: string;
-  content: string;
-  imageUrl?: string;
-  tribeId?: string;
-  createdAt: Timestamp;
-  updatedAt: Timestamp;
-  reactions: {[emoji: string]: number};
-  commentCount: number;
-  viewCount: number;
-}
-
-interface Achievement {
-  id: string;
-  name: string;
-  description: string;
-  icon: string;
-  rarity: "common" | "rare" | "epic" | "legendary";
-  unlockedAt?: Timestamp;
-  progress?: number;
-}
-
-// MARK: - Auth Triggers
+// MARK: - Authentication Triggers
 
 /**
- * Create user document on signup
+ * Create user document when new user signs up
  */
 export const onUserCreated = functions.auth.user().onCreate(async (user) => {
-  const userData: User = {
-    id: user.uid,
-    name: user.displayName || "User",
-    email: user.email || "",
-    joinedTribes: [],
-    createdAt: admin.firestore.Timestamp.now(),
-    preferences: {
-      notificationFrequency: "balanced",
-      notificationStyle: "textAndEmojiAndSound",
-      darkMode: true,
-      soundEnabled: true,
-    },
-  };
-
   try {
-    await db.collection("users").doc(user.uid).set(userData);
-    console.log("✅ User document created:", user.uid);
-    return {success: true};
+    const userData = {
+      id: user.uid,
+      name: user.displayName || 'User',
+      email: user.email || '',
+      avatar: user.photoURL || null,
+      joinedTribes: ['Productivity'],
+      createdAt: admin.firestore.Timestamp.now(),
+      updatedAt: admin.firestore.Timestamp.now(),
+      preferences: {
+        notificationFrequency: 'balanced',
+        notificationStyle: 'text_emoji',
+        darkMode: true,
+        dndEnabled: false
+      },
+      stats: {
+        routinesCompleted: 0,
+        currentStreak: 0,
+        bestStreak: 0,
+        postsCreated: 0,
+        pointsEarned: 0
+      }
+    };
+
+    await db.collection('users').doc(user.uid).set(userData);
+    console.log(`User created: ${user.uid}`);
   } catch (error) {
-    console.error("❌ Error creating user document:", error);
-    throw error;
+    console.error(`Error creating user: ${error}`);
   }
 });
 
 /**
- * Delete user data on account deletion
+ * Clean up user data when account is deleted
  */
 export const onUserDeleted = functions.auth.user().onDelete(async (user) => {
   try {
-    await db.collection("users").doc(user.uid).delete();
-    console.log("✅ User data deleted:", user.uid);
-    return {success: true};
+    await db.collection('users').doc(user.uid).delete();
+
+    const routinesSnapshot = await db.collection('routines')
+      .where('userId', '==', user.uid)
+      .get();
+
+    for (const doc of routinesSnapshot.docs) {
+      await doc.ref.delete();
+    }
+
+    const postsSnapshot = await db.collection('posts')
+      .where('authorId', '==', user.uid)
+      .get();
+
+    for (const doc of postsSnapshot.docs) {
+      await doc.ref.delete();
+    }
+
+    console.log(`User deleted: ${user.uid}`);
   } catch (error) {
-    console.error("❌ Error deleting user data:", error);
-    throw error;
+    console.error(`Error deleting user: ${error}`);
   }
 });
 
 // MARK: - Routine Functions
 
 /**
- * Get routine suggestions based on user behavior
+ * Get routine suggestions
  */
-export const getRoutineSuggestions = functions.https.onCall(
-    async (data, context) => {
-      if (!context.auth) {
-        throw new functions.https.HttpsError(
-            "unauthenticated",
-            "User must be authenticated"
-        );
-      }
+export const getRoutineSuggestions = functions.https.onCall(async (data, context) => {
+  if (!context.auth) {
+    throw new functions.https.HttpsError('unauthenticated', 'User must be authenticated');
+  }
 
-      const userId = context.auth.uid;
+  const templates = [
+    { name: 'Morning Routine', emoji: '🌅', tasks: ['Exercise', 'Breakfast', 'Meditation'] },
+    { name: 'Productivity Boost', emoji: '🎯', tasks: ['Focus Session 1', 'Break', 'Focus Session 2'] },
+    { name: 'Evening Wind Down', emoji: '🌙', tasks: ['Journal', 'Read', 'Prepare for tomorrow'] },
+    { name: 'Health & Fitness', emoji: '💪', tasks: ['Warm up', 'Strength training', 'Stretch'] },
+    { name: 'Creative Session', emoji: '🎨', tasks: ['Brainstorm', 'Create', 'Review work'] },
+    { name: 'Family Time', emoji: '👨‍👩‍👧‍👦', tasks: ['Meal together', 'Activity', 'Bedtime'] }
+  ];
 
-      try {
-        // TODO: Implement ML-based routine suggestion logic
-        // For MVP, return hardcoded suggestions
-
-        const suggestions: Routine[] = [
-          {
-            id: "sug_morning",
-            name: "Morning Routine",
-            emoji: "📅",
-            tasks: [
-              {
-                id: "task_1",
-                name: "Exercise",
-                order: 0,
-                isCompleted: false,
-              },
-              {
-                id: "task_2",
-                name: "Breakfast",
-                order: 1,
-                isCompleted: false,
-              },
-            ],
-            schedule: "daily",
-            estimatedDuration: 1800,
-            isActive: true,
-            createdAt: admin.firestore.Timestamp.now(),
-            updatedAt: admin.firestore.Timestamp.now(),
-          },
-        ];
-
-        console.log("✅ Routine suggestions generated for user:", userId);
-
-        return {
-          success: true,
-          suggestions,
-        };
-      } catch (error) {
-        console.error("❌ Error generating suggestions:", error);
-        throw new functions.https.HttpsError(
-            "internal",
-            "Failed to generate suggestions"
-        );
-      }
-    }
-);
+  return { suggestions: templates };
+});
 
 // MARK: - Achievement Functions
 
 /**
- * Check and award achievements on task completion
+ * Award achievement when routine is completed
  */
-export const onTaskCompleted = functions.firestore
-    .document("users/{userId}/routines/{routineId}/tasks/{taskId}")
-    .onUpdate(async (change, context) => {
-      const before = change.before.data();
-      const after = change.after.data();
+export const onRoutineCompleted = functions.firestore
+  .document('routines/{routineId}')
+  .onUpdate(async (change, context) => {
+    const before = change.before.data();
+    const after = change.after.data();
 
-      // Only process if task was just completed
-      if (before.isCompleted || !after.isCompleted) {
-        return null;
-      }
-
-      const {userId} = context.params;
+    if (!before?.completedToday && after?.completedToday) {
+      const userId = after.userId;
 
       try {
-        // Check for "First Routine" achievement
-        const routines = await db
-            .collection("users")
-            .doc(userId)
-            .collection("routines")
-            .get();
+        const userDoc = await db.collection('users').doc(userId).get();
+        const userData = userDoc.data();
+        const currentStreak = (userData?.stats?.currentStreak || 0) + 1;
 
-        const completedRoutines = routines.docs.filter((doc) => {
-          const tasks = doc.data().tasks || [];
-          return tasks.every((t: RoutineTask) => t.isCompleted);
+        await db.collection('users').doc(userId).update({
+          'stats.routinesCompleted': admin.firestore.FieldValue.increment(1),
+          'stats.currentStreak': currentStreak,
+          'stats.pointsEarned': admin.firestore.FieldValue.increment(10)
         });
 
-        if (completedRoutines.length === 1) {
-          // First routine completed!
-          await awardAchievement(
-              userId,
-              "ach_first_routine",
-              "Getting Started",
-              "Complete your first routine",
-              "🎯"
-          );
-        }
+        if (currentStreak === 7) await grantAchievement(userId, 'streak_7');
+        else if (currentStreak === 30) await grantAchievement(userId, 'streak_30');
+        else if (currentStreak === 100) await grantAchievement(userId, 'streak_100');
 
-        console.log("✅ Task completion processed for user:", userId);
-        return null;
+        await updateLeaderboard(userId, currentStreak);
+        console.log(`Routine completed for user: ${userId}`);
       } catch (error) {
-        console.error("❌ Error processing task completion:", error);
-        throw error;
+        console.error(`Error processing routine completion: ${error}`);
       }
-    });
+    }
+  });
 
 /**
- * Award an achievement to a user
+ * Grant achievement to user
  */
-async function awardAchievement(
-    userId: string,
-    achievementId: string,
-    name: string,
-    description: string,
-    icon: string
-) {
-  const achievement: Achievement = {
-    id: achievementId,
-    name,
-    description,
-    icon,
-    rarity: "common",
-    unlockedAt: admin.firestore.Timestamp.now(),
-  };
-
-  await db
-      .collection("users")
+async function grantAchievement(userId: string, achievementId: string) {
+  try {
+    const achievementRef = db.collection('users')
       .doc(userId)
-      .collection("achievements")
-      .doc(achievementId)
-      .set(achievement, {merge: true});
+      .collection('achievements')
+      .doc(achievementId);
 
-  console.log("🏆 Achievement awarded:", name, "to user:", userId);
+    await achievementRef.set({
+      achievementId,
+      unlockedAt: admin.firestore.Timestamp.now()
+    });
+
+    await sendNotification(userId, {
+      title: '🎉 Achievement Unlocked!',
+      body: `You've unlocked a new achievement!`,
+      type: 'achievement'
+    });
+  } catch (error) {
+    console.error(`Error granting achievement: ${error}`);
+  }
+}
+
+/**
+ * Update leaderboard
+ */
+async function updateLeaderboard(userId: string, streakCount: number) {
+  try {
+    const userDoc = await db.collection('users').doc(userId).get();
+    const userData = userDoc.data();
+
+    await db.collection('leaderboard').doc(userId).set({
+      userId,
+      username: userData?.name || 'Anonymous',
+      points: (userData?.stats?.pointsEarned || 0),
+      streak: streakCount,
+      updatedAt: admin.firestore.Timestamp.now()
+    });
+  } catch (error) {
+    console.error(`Error updating leaderboard: ${error}`);
+  }
 }
 
 // MARK: - Notification Functions
 
 /**
- * Send routine reminder notification
+ * Send routine reminder
  */
 export const sendRoutineReminder = functions.pubsub
-    .schedule("every 1 hours")
-    .onRun(async (context) => {
-      try {
-        // TODO: Query all users with active routines
-        // Send notifications to those matching their schedule
+  .schedule('0 8 * * *')
+  .timeZone('America/New_York')
+  .onRun(async (context) => {
+    try {
+      const usersSnapshot = await db.collection('users')
+        .where('preferences.notificationFrequency', 'in', ['balanced', 'assertive'])
+        .get();
 
-        console.log("✅ Routine reminders sent");
-        return {success: true};
-      } catch (error) {
-        console.error("❌ Error sending reminders:", error);
-        throw error;
+      for (const userDoc of usersSnapshot.docs) {
+        const userId = userDoc.id;
+        await sendNotification(userId, {
+          title: '⏰ Time for your routine!',
+          body: 'Start your routine to build your streak',
+          type: 'reminder'
+        });
       }
-    });
+
+      console.log(`Sent routine reminders to ${usersSnapshot.size} users`);
+    } catch (error) {
+      console.error(`Error sending reminders: ${error}`);
+    }
+  });
 
 /**
- * Send push notification to user
+ * Generic notification sender
  */
-export const sendNotification = functions.https.onCall(
-    async (data, context) => {
-      if (!context.auth) {
-        throw new functions.https.HttpsError(
-            "unauthenticated",
-            "User must be authenticated"
-        );
-      }
+async function sendNotification(userId: string, notification: any) {
+  try {
+    const notificationRef = db.collection('notifications')
+      .doc(userId)
+      .collection('messages')
+      .doc();
 
-      const {userId, title, body, badge} = data;
-
-      try {
-        // TODO: Send via FCM/APNs
-
-        console.log("📬 Notification sent:", title);
-
-        return {success: true};
-      } catch (error) {
-        console.error("❌ Error sending notification:", error);
-        throw new functions.https.HttpsError(
-            "internal",
-            "Failed to send notification"
-        );
-      }
-    }
-);
+    await notificationRef.set({
+      title: notification.title,
+      body: notification.body,
+      type: notification.type,
+      read: false,
+      createdAt: admin.firestore.Timestamp.now()
+    });
+  } catch (error) {
+    console.error(`Error sending notification: ${error}`);
+  }
+}
 
 // MARK: - Community Functions
 
 /**
- * Create a new post
+ * Create post and update tribe statistics
  */
-export const createPost = functions.https.onCall(
-    async (data, context) => {
-      if (!context.auth) {
-        throw new functions.https.HttpsError(
-            "unauthenticated",
-            "User must be authenticated"
-        );
-      }
+export const onPostCreated = functions.firestore
+  .document('posts/{postId}')
+  .onCreate(async (snap, context) => {
+    const postData = snap.data();
 
-      const {content, tribeId} = data;
-      const userId = context.auth.uid;
+    try {
+      const tribeRef = db.collection('tribes').doc(postData.tribe);
+      await tribeRef.update({
+        postCount: admin.firestore.FieldValue.increment(1),
+        updatedAt: admin.firestore.Timestamp.now()
+      });
 
-      try {
-        // Get user info
-        const user = await db.collection("users").doc(userId).get();
-        const userData = user.data() as User;
+      await db.collection('users').doc(postData.authorId).update({
+        'stats.postsCreated': admin.firestore.FieldValue.increment(1)
+      });
 
-        // Create post
-        const postRef = await db.collection("posts").add({
-          authorId: userId,
-          author: userData.name,
-          content,
-          tribeId: tribeId || null,
-          createdAt: admin.firestore.Timestamp.now(),
-          updatedAt: admin.firestore.Timestamp.now(),
-          reactions: {},
-          commentCount: 0,
-          viewCount: 0,
-        });
-
-        console.log("✅ Post created:", postRef.id);
-
-        return {
-          success: true,
-          postId: postRef.id,
-        };
-      } catch (error) {
-        console.error("❌ Error creating post:", error);
-        throw new functions.https.HttpsError(
-            "internal",
-            "Failed to create post"
-        );
-      }
+      console.log(`Post created: ${context.params.postId}`);
+    } catch (error) {
+      console.error(`Error processing post creation: ${error}`);
     }
-);
+  });
 
 /**
- * React to a post
+ * React to post
  */
-export const reactToPost = functions.https.onCall(
-    async (data, context) => {
-      if (!context.auth) {
-        throw new functions.https.HttpsError(
-            "unauthenticated",
-            "User must be authenticated"
-        );
-      }
+export const reactToPost = functions.https.onCall(async (data, context) => {
+  if (!context.auth) {
+    throw new functions.https.HttpsError('unauthenticated', 'User must be authenticated');
+  }
 
-      const {postId, emoji} = data;
+  const { postId, reactionType } = data;
 
-      try {
-        const postRef = db.collection("posts").doc(postId);
-        await postRef.update({
-          [`reactions.${emoji}`]: admin.firestore.FieldValue.increment(1),
-        });
+  try {
+    const postRef = db.collection('posts').doc(postId);
+    const postDoc = await postRef.get();
+    const postData = postDoc.data();
 
-        console.log("✅ Reaction added to post:", postId);
-
-        return {success: true};
-      } catch (error) {
-        console.error("❌ Error adding reaction:", error);
-        throw new functions.https.HttpsError(
-            "internal",
-            "Failed to add reaction"
-        );
-      }
+    if (!postData) {
+      throw new functions.https.HttpsError('not-found', 'Post not found');
     }
-);
 
-// MARK: - Admin Functions
+    await postRef
+      .collection('reactions')
+      .doc(context.auth.uid)
+      .set({
+        userId: context.auth.uid,
+        type: reactionType,
+        createdAt: admin.firestore.Timestamp.now()
+      });
+
+    if (reactionType === 'like') {
+      await postRef.update({
+        likeCount: admin.firestore.FieldValue.increment(1)
+      });
+    }
+
+    if (postData.authorId !== context.auth.uid) {
+      await sendNotification(postData.authorId, {
+        title: `❤️ Someone liked your post!`,
+        body: postData.content.substring(0, 50) + '...',
+        type: 'reaction'
+      });
+    }
+
+    return { success: true };
+  } catch (error) {
+    console.error(`Error reacting to post: ${error}`);
+    throw new functions.https.HttpsError('internal', 'Error reacting to post');
+  }
+});
+
+// MARK: - Analytics Functions
 
 /**
- * Get analytics for admin dashboard
+ * Get user analytics
  */
-export const getAnalytics = functions.https.onCall(
-    async (data, context) => {
-      // TODO: Add admin role check
-      if (!context.auth) {
-        throw new functions.https.HttpsError(
-            "unauthenticated",
-            "User must be authenticated"
-        );
-      }
+export const getUserAnalytics = functions.https.onCall(async (data, context) => {
+  if (!context.auth) {
+    throw new functions.https.HttpsError('unauthenticated', 'User must be authenticated');
+  }
 
-      try {
-        const users = await db.collection("users").count().get();
-        const posts = await db.collection("posts").count().get();
+  try {
+    const userId = context.auth.uid;
+    const userDoc = await db.collection('users').doc(userId).get();
+    const userData = userDoc.data();
 
-        console.log("✅ Analytics retrieved");
-
-        return {
-          totalUsers: users.data().count,
-          totalPosts: posts.data().count,
-          timestamp: new Date().toISOString(),
-        };
-      } catch (error) {
-        console.error("❌ Error retrieving analytics:", error);
-        throw new functions.https.HttpsError(
-            "internal",
-            "Failed to retrieve analytics"
-        );
-      }
-    }
-);
+    return {
+      routinesCompleted: userData?.stats?.routinesCompleted || 0,
+      currentStreak: userData?.stats?.currentStreak || 0,
+      bestStreak: userData?.stats?.bestStreak || 0,
+      postsCreated: userData?.stats?.postsCreated || 0,
+      pointsEarned: userData?.stats?.pointsEarned || 0,
+      joinedTribes: userData?.joinedTribes || []
+    };
+  } catch (error) {
+    console.error(`Error getting analytics: ${error}`);
+    throw new functions.https.HttpsError('internal', 'Error getting analytics');
+  }
+});
 
 // MARK: - Health Check
 
-export const health = functions.https.onRequest((req, res) => {
-  res.status(200).json({
-    status: "OK",
-    timestamp: new Date().toISOString(),
-    message: "Pulse App Backend is running",
-  });
+export const healthCheck = functions.https.onRequest((req, res) => {
+  res.status(200).send({ status: 'healthy', timestamp: new Date().toISOString() });
 });
