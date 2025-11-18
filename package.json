@@ -1,0 +1,26 @@
+{
+  "name": "woodcraft-designer",
+  "version": "1.0.0",
+  "description": "The ultimate app for woodworkers - Create, customize, and bring your woodworking projects to life",
+  "main": "index.js",
+  "scripts": {
+    "install-all": "npm install && cd frontend && npm install && cd ../backend && npm install",
+    "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
+    "dev:frontend": "cd frontend && npm run dev",
+    "dev:backend": "cd backend && npm run dev",
+    "build": "cd frontend && npm run build",
+    "start": "cd backend && npm start"
+  },
+  "keywords": [
+    "woodworking",
+    "3d-modeling",
+    "design",
+    "diy",
+    "furniture"
+  ],
+  "author": "",
+  "license": "Apache-2.0",
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}
