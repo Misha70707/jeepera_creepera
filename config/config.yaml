@@ -1,0 +1,104 @@
+# Nexus Configuration
+
+# AI Provider Settings
+ai:
+  provider: "anthropic"  # or "openai"
+  model: "claude-sonnet-4-5-20250929"  # or "gpt-4o"
+  api_key_env: "ANTHROPIC_API_KEY"  # Environment variable name
+  temperature: 0.7
+  max_tokens: 4096
+
+# Vector Database Settings
+vector_db:
+  type: "chromadb"
+  path: "./data/vector_db"
+  collection_name: "nexus_memory"
+  embedding_model: "all-MiniLM-L6-v2"
+
+# Memory Settings
+memory:
+  short_term_context_size: 10  # Number of recent interactions to keep
+  long_term_enabled: true
+  auto_summarize: true
+  summarize_every_n_interactions: 50
+
+# Coder Core Settings
+coder:
+  supported_languages:
+    - python
+    - javascript
+    - typescript
+    - rust
+    - go
+  default_framework:
+    python: "fastapi"
+    javascript: "react"
+  testing_enabled: true
+  auto_format: true
+  code_review_enabled: true
+
+# Learner Core Settings
+learner:
+  web_scraping_enabled: true
+  max_scrape_depth: 3
+  scrape_delay_ms: 1000
+  trusted_sources:
+    - "stackoverflow.com"
+    - "github.com"
+    - "dev.to"
+    - "medium.com"
+    - "arxiv.org"
+  learning_schedule: "0 */6 * * *"  # Every 6 hours
+
+# Agent Spawner Settings
+agent_spawner:
+  max_concurrent_agents: 10
+  agent_timeout_minutes: 30
+  auto_cleanup: true
+
+# Salesman Core Settings
+salesman:
+  market_analysis_enabled: true
+  idea_scoring_threshold: 0.7  # 0-1 scale
+  auto_mvp_creation: false  # Requires human approval
+  supported_marketplaces:
+    - "product_hunt"
+    - "gumroad"
+    - "shopify"
+  marketing_enabled: true
+  social_media_posting: false  # Requires human approval
+
+# Autonomous Loops
+loops:
+  self_improvement:
+    enabled: true
+    interval_hours: 24
+  sales_funnel:
+    enabled: true
+    interval_hours: 72
+
+# Ethical Safeguards
+ethics:
+  constitution_path: "./config/ethical_constitution.yaml"
+  human_approval_required:
+    - "deploy_to_production"
+    - "spend_money"
+    - "delete_data"
+    - "post_to_social_media"
+    - "send_emails"
+  sandbox_mode: true
+  max_api_spend_per_day: 50.0  # USD
+
+# Logging & Monitoring
+logging:
+  level: "INFO"
+  path: "./data/logs"
+  rotation: "1 day"
+  retention: "30 days"
+  transparency_log_enabled: true
+
+# Development Settings
+dev:
+  debug_mode: false
+  test_mode: false
+  mock_external_apis: false
