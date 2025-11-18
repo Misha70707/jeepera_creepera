@@ -1,0 +1,76 @@
+# iOS
+ios/Pods/
+ios/Podfile.lock
+ios/DerivedData/
+ios/.DS_Store
+ios/*.xcworkspace/
+ios/build/
+ios/Carthage/
+ios/.SwiftFormat
+
+# Android
+android/.gradle/
+android/local.properties
+android/*.jks
+android/app/debug/
+android/app/release/
+android/.idea/
+android/*.iml
+android/captures/
+android/gradle-app.setting
+
+# Backend
+backend/node_modules/
+backend/.env.local
+backend/.env.*.local
+backend/lib/
+backend/dist/
+backend/coverage/
+
+# General
+.DS_Store
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.env
+.env.local
+.env.*.local
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+
+# Build artifacts
+dist/
+build/
+*.o
+*.a
+*.so
+
+# IDE
+.vscode/settings.json
+.vscode/extensions.json
+.vscode/launch.json
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# OS
+Thumbs.db
+.AppleDouble
+.LSOverride
+
+# Secrets
+.secrets/
+secrets.json
+*.pem
+*.key
+*.cert
+
+# Temp files
+*.tmp
+*.temp
+.tmp/
