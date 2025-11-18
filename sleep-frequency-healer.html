@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sleep & Healing Frequency Therapy</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #0f0f1e 100%);
+            color: #e0e0e0;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            width: 100%;
+            background: rgba(30, 30, 50, 0.9);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(10px);
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #a0a0b0;
+            margin-bottom: 40px;
+            font-size: 1.1em;
+        }
+
+        .section {
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            font-size: 1.3em;
+            margin-bottom: 15px;
+            color: #9f7aea;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .presets {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .preset-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            padding: 15px;
+            border-radius: 12px;
+            color: white;
+            font-size: 1em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .preset-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.5);
+        }
+
+        .preset-btn.active {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            box-shadow: 0 6px 25px rgba(240, 147, 251, 0.6);
+        }
+
+        .frequency-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .freq-btn {
+            background: rgba(102, 126, 234, 0.2);
+            border: 2px solid rgba(102, 126, 234, 0.4);
+            padding: 12px;
+            border-radius: 10px;
+            color: #c0c0d0;
+            font-size: 0.9em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .freq-btn:hover {
+            border-color: rgba(102, 126, 234, 0.8);
+            background: rgba(102, 126, 234, 0.3);
+        }
+
+        .freq-btn.active {
+            background: rgba(102, 126, 234, 0.5);
+            border-color: #667eea;
+            color: white;
+        }
+
+        .freq-name {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .freq-desc {
+            font-size: 0.8em;
+            opacity: 0.8;
+        }
+
+        .controls {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .control-group {
+            background: rgba(20, 20, 35, 0.5);
+            padding: 20px;
+            border-radius: 12px;
+        }
+
+        .control-label {
+            display: block;
+            margin-bottom: 10px;
+            color: #a0a0b0;
+            font-size: 0.9em;
+        }
+
+        input[type="range"] {
+            width: 100%;
+            height: 8px;
+            border-radius: 5px;
+            background: rgba(102, 126, 234, 0.3);
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            cursor: pointer;
+            box-shadow: 0 2px 10px rgba(102, 126, 234, 0.5);
+        }
+
+        input[type="range"]::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            cursor: pointer;
+            border: none;
+        }
+
+        .value-display {
+            text-align: center;
+            font-size: 1.2em;
+            color: #667eea;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+
+        select {
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            background: rgba(20, 20, 35, 0.8);
+            border: 2px solid rgba(102, 126, 234, 0.4);
+            color: #e0e0e0;
+            font-size: 1em;
+            cursor: pointer;
+        }
+
+        .play-controls {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 30px;
+        }
+
+        .play-btn {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            border: none;
+            padding: 18px 40px;
+            border-radius: 50px;
+            color: white;
+            font-size: 1.2em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(17, 153, 142, 0.4);
+            font-weight: bold;
+        }
+
+        .play-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(17, 153, 142, 0.6);
+        }
+
+        .stop-btn {
+            background: linear-gradient(135deg, #eb3349 0%, #f45c43 100%);
+            box-shadow: 0 4px 15px rgba(235, 51, 73, 0.4);
+        }
+
+        .stop-btn:hover {
+            box-shadow: 0 6px 20px rgba(235, 51, 73, 0.6);
+        }
+
+        .visualizer {
+            width: 100%;
+            height: 150px;
+            background: rgba(20, 20, 35, 0.5);
+            border-radius: 12px;
+            margin-top: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        canvas {
+            width: 100%;
+            height: 100%;
+        }
+
+        .status {
+            text-align: center;
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(102, 126, 234, 0.1);
+            border-radius: 10px;
+            font-size: 1.1em;
+        }
+
+        .status.playing {
+            background: rgba(17, 153, 142, 0.2);
+            color: #38ef7d;
+        }
+
+        .timer-display {
+            text-align: center;
+            font-size: 2em;
+            color: #667eea;
+            margin-top: 15px;
+            font-weight: bold;
+        }
+
+        @media (max-width: 768px) {
+            .controls {
+                grid-template-columns: 1fr;
+            }
+
+            h1 {
+                font-size: 2em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🌙 Sleep & Healing Frequency Therapy</h1>
+        <p class="subtitle">Harness the power of sound frequencies for deep sleep, healing, and regeneration</p>
+
+        <div class="section">
+            <div class="section-title">✨ Preset Programs</div>
+            <div class="presets">
+                <button class="preset-btn" data-preset="deep-sleep">🌊 Deep Sleep</button>
+                <button class="preset-btn" data-preset="healing">💚 Complete Healing</button>
+                <button class="preset-btn" data-preset="regeneration">🔄 Regeneration</button>
+                <button class="preset-btn" data-preset="chakra">🧘 Chakra Balance</button>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-title">🎵 Solfeggio Frequencies</div>
+            <div class="frequency-list" id="frequencyList">
+                <!-- Frequencies will be added here by JavaScript -->
+            </div>
+        </div>
+
+        <div class="controls">
+            <div class="control-group">
+                <label class="control-label">Volume</label>
+                <input type="range" id="volumeControl" min="0" max="100" value="50">
+                <div class="value-display" id="volumeDisplay">50%</div>
+            </div>
+
+            <div class="control-group">
+                <label class="control-label">Auto-Stop Timer</label>
+                <select id="timerSelect">
+                    <option value="0">Continuous</option>
+                    <option value="1800">30 Minutes</option>
+                    <option value="3600">1 Hour</option>
+                    <option value="5400">90 Minutes</option>
+                    <option value="7200" selected>2 Hours</option>
+                    <option value="14400">4 Hours</option>
+                    <option value="28800">8 Hours</option>
+                </select>
+                <div class="timer-display" id="timerDisplay">--:--</div>
+            </div>
+        </div>
+
+        <div class="play-controls">
+            <button class="play-btn" id="playBtn">▶️ Start Therapy</button>
+            <button class="play-btn stop-btn" id="stopBtn">⏹️ Stop</button>
+        </div>
+
+        <div class="visualizer">
+            <canvas id="visualizer"></canvas>
+        </div>
+
+        <div class="status" id="status">Select a preset or frequency to begin</div>
+    </div>
+
+    <script>
+        // Frequency definitions with healing properties
+        const frequencies = {
+            174: { name: '174 Hz', desc: 'Pain Relief', color: '#FF6B6B' },
+            285: { name: '285 Hz', desc: 'Tissue Regeneration', color: '#4ECDC4' },
+            396: { name: '396 Hz', desc: 'Liberation from Fear', color: '#45B7D1' },
+            417: { name: '417 Hz', desc: 'Facilitating Change', color: '#96CEB4' },
+            528: { name: '528 Hz', desc: 'DNA Repair & Love', color: '#FFEAA7' },
+            639: { name: '639 Hz', desc: 'Relationships', color: '#DFE6E9' },
+            741: { name: '741 Hz', desc: 'Expression & Solutions', color: '#A29BFE' },
+            852: { name: '852 Hz', desc: 'Spiritual Awakening', color: '#6C5CE7' },
+            963: { name: '963 Hz', desc: 'Divine Consciousness', color: '#FD79A8' }
+        };
+
+        // Preset programs
+        const presets = {
+            'deep-sleep': [174, 285, 396], // Deep sleep blend
+            'healing': [528, 285, 174], // Complete healing
+            'regeneration': [285, 528, 741], // Cell regeneration
+            'chakra': [396, 417, 528, 639, 741, 852, 963] // Full chakra alignment
+        };
+
+        // Audio context and nodes
+        let audioContext;
+        let oscillators = [];
+        let gainNode;
+        let analyser;
+        let isPlaying = false;
+        let timerInterval;
+        let remainingTime = 0;
+        let currentPreset = null;
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', init);
+
+        function init() {
+            renderFrequencies();
+            setupEventListeners();
+            setupVisualizer();
+        }
+
+        function renderFrequencies() {
+            const list = document.getElementById('frequencyList');
+            list.innerHTML = '';
+
+            Object.entries(frequencies).forEach(([freq, data]) => {
+                const btn = document.createElement('button');
+                btn.className = 'freq-btn';
+                btn.dataset.freq = freq;
+                btn.innerHTML = `
+                    <span class="freq-name">${data.name}</span>
+                    <span class="freq-desc">${data.desc}</span>
+                `;
+                list.appendChild(btn);
+            });
+        }
+
+        function setupEventListeners() {
+            // Preset buttons
+            document.querySelectorAll('.preset-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    currentPreset = btn.dataset.preset;
+                    selectPreset(currentPreset);
+                });
+            });
+
+            // Frequency buttons
+            document.addEventListener('click', (e) => {
+                if (e.target.closest('.freq-btn')) {
+                    const btn = e.target.closest('.freq-btn');
+                    btn.classList.toggle('active');
+                    currentPreset = null;
+                    document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
+                }
+            });
+
+            // Volume control
+            document.getElementById('volumeControl').addEventListener('input', (e) => {
+                const volume = e.target.value / 100;
+                document.getElementById('volumeDisplay').textContent = e.target.value + '%';
+                if (gainNode) {
+                    gainNode.gain.setTargetAtTime(volume, audioContext.currentTime, 0.1);
+                }
+            });
+
+            // Play/Stop buttons
+            document.getElementById('playBtn').addEventListener('click', startTherapy);
+            document.getElementById('stopBtn').addEventListener('click', stopTherapy);
+        }
+
+        function selectPreset(presetName) {
+            // Clear all selections
+            document.querySelectorAll('.freq-btn').forEach(btn => btn.classList.remove('active'));
+
+            // Select preset frequencies
+            const freqs = presets[presetName];
+            freqs.forEach(freq => {
+                const btn = document.querySelector(`[data-freq="${freq}"]`);
+                if (btn) btn.classList.add('active');
+            });
+
+            updateStatus(`Selected preset: ${presetName.replace('-', ' ').toUpperCase()}`);
+        }
+
+        function startTherapy() {
+            const selectedFreqs = getSelectedFrequencies();
+
+            if (selectedFreqs.length === 0) {
+                alert('Please select at least one frequency or preset program');
+                return;
+            }
+
+            if (isPlaying) {
+                stopTherapy();
+            }
+
+            // Initialize audio context
+            audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            gainNode = audioContext.createGain();
+            analyser = audioContext.createAnalyser();
+
+            const volume = document.getElementById('volumeControl').value / 100;
+            gainNode.gain.setValueAtTime(0, audioContext.currentTime);
+            gainNode.gain.linearRampToValueAtTime(volume, audioContext.currentTime + 2);
+
+            gainNode.connect(analyser);
+            analyser.connect(audioContext.destination);
+
+            // Create oscillators for each frequency
+            selectedFreqs.forEach(freq => {
+                const osc = audioContext.createOscillator();
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(freq, audioContext.currentTime);
+                osc.connect(gainNode);
+                osc.start();
+                oscillators.push(osc);
+            });
+
+            isPlaying = true;
+            updateStatus(`Playing ${selectedFreqs.length} healing frequencies... 🎵`);
+            document.getElementById('status').classList.add('playing');
+
+            // Start timer if set
+            const timerValue = parseInt(document.getElementById('timerSelect').value);
+            if (timerValue > 0) {
+                startTimer(timerValue);
+            }
+
+            // Animate visualizer
+            animateVisualizer();
+        }
+
+        function stopTherapy() {
+            if (!isPlaying) return;
+
+            // Fade out
+            if (gainNode) {
+                gainNode.gain.linearRampToValueAtTime(0, audioContext.currentTime + 1);
+            }
+
+            setTimeout(() => {
+                oscillators.forEach(osc => {
+                    osc.stop();
+                    osc.disconnect();
+                });
+
+                if (audioContext) {
+                    audioContext.close();
+                }
+
+                oscillators = [];
+                isPlaying = false;
+
+                updateStatus('Therapy session ended');
+                document.getElementById('status').classList.remove('playing');
+
+                clearInterval(timerInterval);
+                document.getElementById('timerDisplay').textContent = '--:--';
+            }, 1000);
+        }
+
+        function getSelectedFrequencies() {
+            const selected = [];
+            document.querySelectorAll('.freq-btn.active').forEach(btn => {
+                selected.push(parseInt(btn.dataset.freq));
+            });
+            return selected;
+        }
+
+        function startTimer(duration) {
+            remainingTime = duration;
+            updateTimerDisplay();
+
+            timerInterval = setInterval(() => {
+                remainingTime--;
+                updateTimerDisplay();
+
+                if (remainingTime <= 0) {
+                    stopTherapy();
+                }
+            }, 1000);
+        }
+
+        function updateTimerDisplay() {
+            const hours = Math.floor(remainingTime / 3600);
+            const minutes = Math.floor((remainingTime % 3600) / 60);
+            const seconds = remainingTime % 60;
+
+            let display = '';
+            if (hours > 0) {
+                display = `${hours}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+            } else {
+                display = `${minutes}:${String(seconds).padStart(2, '0')}`;
+            }
+
+            document.getElementById('timerDisplay').textContent = display;
+        }
+
+        function updateStatus(message) {
+            document.getElementById('status').textContent = message;
+        }
+
+        // Visualizer
+        function setupVisualizer() {
+            const canvas = document.getElementById('visualizer');
+            canvas.width = canvas.offsetWidth * 2;
+            canvas.height = canvas.offsetHeight * 2;
+        }
+
+        function animateVisualizer() {
+            if (!isPlaying || !analyser) return;
+
+            const canvas = document.getElementById('visualizer');
+            const ctx = canvas.getContext('2d');
+            const bufferLength = analyser.frequencyBinCount;
+            const dataArray = new Uint8Array(bufferLength);
+
+            function draw() {
+                if (!isPlaying) return;
+
+                requestAnimationFrame(draw);
+                analyser.getByteFrequencyData(dataArray);
+
+                ctx.fillStyle = 'rgba(20, 20, 35, 0.3)';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                const barWidth = (canvas.width / bufferLength) * 2.5;
+                let barHeight;
+                let x = 0;
+
+                for (let i = 0; i < bufferLength; i++) {
+                    barHeight = (dataArray[i] / 255) * canvas.height * 0.8;
+
+                    const gradient = ctx.createLinearGradient(0, canvas.height - barHeight, 0, canvas.height);
+                    gradient.addColorStop(0, '#667eea');
+                    gradient.addColorStop(1, '#764ba2');
+
+                    ctx.fillStyle = gradient;
+                    ctx.fillRect(x, canvas.height - barHeight, barWidth, barHeight);
+
+                    x += barWidth + 1;
+                }
+            }
+
+            draw();
+        }
+    </script>
+</body>
+</html>
