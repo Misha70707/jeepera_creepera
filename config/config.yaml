@@ -2,11 +2,26 @@
 
 # AI Provider Settings
 ai:
-  provider: "anthropic"  # or "openai"
-  model: "claude-sonnet-4-5-20250929"  # or "gpt-4o"
-  api_key_env: "ANTHROPIC_API_KEY"  # Environment variable name
+  # Primary provider: "anthropic", "openai", or "ollama" (local, FREE!)
+  provider: "ollama"  # Use local model (FREE!)
+
+  # Ollama settings (LOCAL - 100% FREE!)
+  ollama_model: "deepseek-coder:6.7b"  # Great for coding, runs on RTX 3050
+  ollama_base_url: "http://localhost:11434"  # Default Ollama URL
+
+  # Anthropic settings (API - costs money)
+  anthropic_model: "claude-sonnet-4-5-20250929"
+  api_key_env: "ANTHROPIC_API_KEY"
+
+  # OpenAI settings (API - costs money)
+  openai_model: "gpt-4o"
+
+  # Generation settings
   temperature: 0.7
   max_tokens: 4096
+
+  # Fallback mode: if local model fails, try API (requires API key)
+  enable_fallback: false  # Set to true to use API as backup
 
 # Vector Database Settings
 vector_db:
