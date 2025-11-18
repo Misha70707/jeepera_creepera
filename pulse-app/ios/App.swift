@@ -111,35 +111,7 @@ struct RoutinesListView: View {
     }
 }
 
-struct CommunityFeedView: View {
-    var body: some View {
-        NavigationStack {
-            VStack {
-                Text("👥 Community")
-                    .font(.largeTitle)
-                    .fontWeight(.bold)
-                Text("Community Feed Coming Soon")
-                    .foregroundColor(.secondary)
-            }
-            .navigationTitle("Community")
-        }
-    }
-}
-
-struct AchievementsView: View {
-    var body: some View {
-        NavigationStack {
-            VStack {
-                Text("🏆 Achievements")
-                    .font(.largeTitle)
-                    .fontWeight(.bold)
-                Text("Badges & Streaks Coming Soon")
-                    .foregroundColor(.secondary)
-            }
-            .navigationTitle("Achievements")
-        }
-    }
-}
+// CommunityFeedView and AchievementsView moved to separate files
 
 struct SettingsView: View {
     @EnvironmentObject var authService: AuthService
