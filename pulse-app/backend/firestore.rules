@@ -1,0 +1,121 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // MARK: - Helper Functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return request.auth.uid == userId;
+    }
+
+    function hasRole(role) {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid))
+        .data.roles.hasAny([role]);
+    }
+
+    // MARK: - User Collection Rules
+    match /users/{userId} {
+      // Users can read their own profile
+      allow read: if isOwner(userId);
+
+      // Users can update their own profile
+      allow update: if isOwner(userId);
+
+      // Only on signup (via Cloud Function)
+      allow create: if false;
+      allow delete: if false;
+
+      // MARK: - User Subcollections
+      match /routines/{document=**} {
+        allow read, write: if isOwner(userId);
+      }
+
+      match /achievements/{document=**} {
+        allow read: if isOwner(userId);
+        allow write: if false; // Cloud Functions only
+      }
+
+      match /streaks/{document=**} {
+        allow read, write: if isOwner(userId);
+      }
+
+      match /preferences/{document=**} {
+        allow read, write: if isOwner(userId);
+      }
+    }
+
+    // MARK: - Posts (Community Feed)
+    match /posts/{postId} {
+      // Anyone can read published posts
+      allow read: if isAuthenticated();
+
+      // Authors can create/update/delete their own posts
+      allow create: if isAuthenticated();
+      allow update, delete: if isOwner(resource.data.authorId);
+
+      // MARK: - Comments on Posts
+      match /comments/{commentId} {
+        allow read: if isAuthenticated();
+        allow create: if isAuthenticated();
+        allow update, delete: if isOwner(resource.data.authorId);
+      }
+
+      // MARK: - Reactions on Posts
+      match /reactions/{userId} {
+        allow read: if isAuthenticated();
+        allow write: if isOwner(userId);
+      }
+    }
+
+    // MARK: - Tribes (Communities)
+    match /tribes/{tribeId} {
+      // Anyone can read tribe info
+      allow read: if true;
+
+      // Only moderators can update
+      allow update: if get(/databases/$(database)/documents/tribes/$(tribeId))
+        .data.moderators.hasAny([request.auth.uid]);
+
+      // Only on creation (via Cloud Function)
+      allow create, delete: if false;
+
+      // MARK: - Tribe Members
+      match /members/{userId} {
+        allow read: if isAuthenticated();
+        allow write: if isOwner(userId);
+      }
+
+      // MARK: - Tribe Posts
+      match /posts/{postId} {
+        allow read: if isAuthenticated();
+        allow create: if isAuthenticated();
+        allow delete: if isOwner(resource.data.authorId);
+      }
+    }
+
+    // MARK: - Global Collections (Read-Only)
+    match /leaderboard/{period} {
+      allow read: if isAuthenticated();
+      allow write: if false; // Cloud Functions only
+    }
+
+    match /notifications/{notificationId} {
+      allow read: if isOwner(resource.data.userId);
+      allow write: if false; // Cloud Functions only
+    }
+
+    // MARK: - Public Data
+    match /public/{document=**} {
+      allow read: if true;
+      allow write: if false;
+    }
+
+    // MARK: - Deny All Other Paths
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
