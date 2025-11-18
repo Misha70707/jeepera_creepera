@@ -1,0 +1,874 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LLM Prompt Generator - Master Your AI</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            color: #2d3748;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            color: white;
+        }
+
+        h1 {
+            font-size: 3em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .tagline {
+            font-size: 1.3em;
+            opacity: 0.95;
+        }
+
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+        }
+
+        .panel {
+            background: rgba(255, 255, 255, 0.98);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .panel-title {
+            font-size: 1.8em;
+            margin-bottom: 20px;
+            color: #667eea;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+        }
+
+        .section {
+            margin-bottom: 25px;
+        }
+
+        .section-label {
+            font-size: 1.1em;
+            font-weight: 600;
+            color: #4a5568;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .section-help {
+            font-size: 0.85em;
+            color: #718096;
+            margin-bottom: 8px;
+            font-style: italic;
+        }
+
+        .template-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .template-btn {
+            padding: 12px;
+            border: 2px solid #e2e8f0;
+            background: white;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9em;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .template-btn:hover {
+            border-color: #667eea;
+            background: #f7fafc;
+            transform: translateY(-2px);
+        }
+
+        .template-btn.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-color: #667eea;
+        }
+
+        input[type="text"],
+        textarea,
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 1em;
+            font-family: inherit;
+            transition: all 0.3s ease;
+        }
+
+        input[type="text"]:focus,
+        textarea:focus,
+        select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .checkbox-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 10px;
+        }
+
+        .checkbox-label {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            font-size: 0.95em;
+        }
+
+        input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        .output-box {
+            background: #1a202c;
+            color: #e2e8f0;
+            padding: 25px;
+            border-radius: 12px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.95em;
+            line-height: 1.8;
+            white-space: pre-wrap;
+            max-height: 600px;
+            overflow-y: auto;
+            margin-bottom: 15px;
+            box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .output-box::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        .output-box::-webkit-scrollbar-track {
+            background: #2d3748;
+            border-radius: 10px;
+        }
+
+        .output-box::-webkit-scrollbar-thumb {
+            background: #667eea;
+            border-radius: 10px;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 14px 28px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.05em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(17, 153, 142, 0.4);
+        }
+
+        .btn-success:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(17, 153, 142, 0.6);
+        }
+
+        .btn-secondary {
+            background: #e2e8f0;
+            color: #4a5568;
+        }
+
+        .btn-secondary:hover {
+            background: #cbd5e0;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .stat-box {
+            background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            border: 2px solid #e2e8f0;
+        }
+
+        .stat-value {
+            font-size: 1.8em;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .stat-label {
+            font-size: 0.85em;
+            color: #718096;
+            margin-top: 5px;
+        }
+
+        .tips-box {
+            background: linear-gradient(135deg, #fff5f5 0%, #fed7d7 100%);
+            border: 2px solid #fc8181;
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .tips-title {
+            font-weight: 600;
+            color: #742a2a;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+
+        .tips-list {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .tips-list li {
+            padding: 6px 0;
+            color: #742a2a;
+            font-size: 0.9em;
+        }
+
+        .tips-list li:before {
+            content: "💡 ";
+            margin-right: 8px;
+        }
+
+        .examples-section {
+            margin-top: 20px;
+        }
+
+        .example-card {
+            background: #f7fafc;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .example-card:hover {
+            border-color: #667eea;
+            background: white;
+            transform: translateX(5px);
+        }
+
+        .example-title {
+            font-weight: 600;
+            color: #4a5568;
+            margin-bottom: 5px;
+        }
+
+        .example-desc {
+            font-size: 0.85em;
+            color: #718096;
+        }
+
+        .toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, #38ef7d 0%, #11998e 100%);
+            color: white;
+            padding: 16px 24px;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            opacity: 0;
+            transform: translateY(-20px);
+            transition: all 0.3s ease;
+            z-index: 1000;
+            font-weight: 600;
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        @media (max-width: 1200px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2em;
+            }
+
+            .stats {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="toast" id="toast">✅ Copied to clipboard!</div>
+
+    <div class="container">
+        <header>
+            <h1>🤖 LLM Prompt Generator</h1>
+            <p class="tagline">Craft perfect prompts that make AI truly embody any persona</p>
+        </header>
+
+        <div class="main-grid">
+            <!-- Left Panel - Input -->
+            <div class="panel">
+                <div class="panel-title">⚙️ Build Your Prompt</div>
+
+                <div class="section">
+                    <div class="section-label">📋 Quick Templates</div>
+                    <div class="template-grid">
+                        <button class="template-btn" data-template="expert">Expert</button>
+                        <button class="template-btn" data-template="creative">Creative</button>
+                        <button class="template-btn" data-template="analyst">Analyst</button>
+                        <button class="template-btn" data-template="teacher">Teacher</button>
+                        <button class="template-btn" data-template="coder">Coder</button>
+                        <button class="template-btn" data-template="writer">Writer</button>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <div class="section-label">🎭 Persona/Role</div>
+                    <div class="section-help">Who should the AI be? Be specific!</div>
+                    <input type="text" id="role" placeholder="e.g., You are a senior software architect with 15 years of experience...">
+                </div>
+
+                <div class="section">
+                    <div class="section-label">🌍 Context & Background</div>
+                    <div class="section-help">What does the AI need to know?</div>
+                    <textarea id="context" placeholder="e.g., You're working on a high-traffic e-commerce platform that needs to scale..."></textarea>
+                </div>
+
+                <div class="section">
+                    <div class="section-label">🎯 Task/Objective</div>
+                    <div class="section-help">What exactly should the AI do?</div>
+                    <textarea id="task" placeholder="e.g., Design a database schema for a product catalog that can handle 10 million products..."></textarea>
+                </div>
+
+                <div class="section">
+                    <div class="section-label">⚠️ Constraints & Rules</div>
+                    <div class="section-help">What must the AI follow/avoid?</div>
+                    <textarea id="constraints" placeholder="e.g., Must use PostgreSQL, avoid NoSQL, prioritize data consistency over speed..."></textarea>
+                </div>
+
+                <div class="section">
+                    <div class="section-label">📤 Output Format</div>
+                    <div class="section-help">How should the response be structured?</div>
+                    <select id="outputFormat">
+                        <option value="">Custom (type below)</option>
+                        <option value="detailed">Detailed explanation with examples</option>
+                        <option value="step-by-step">Step-by-step instructions</option>
+                        <option value="code">Code with comments</option>
+                        <option value="list">Bullet point list</option>
+                        <option value="table">Table/structured format</option>
+                        <option value="json">JSON format</option>
+                        <option value="markdown">Markdown document</option>
+                    </select>
+                    <textarea id="customFormat" placeholder="Custom output format (e.g., Start with summary, then pros/cons, end with recommendation)" style="margin-top: 10px;"></textarea>
+                </div>
+
+                <div class="section">
+                    <div class="section-label">✨ Tone & Style</div>
+                    <div class="checkbox-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" class="tone-checkbox" value="professional"> Professional
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" class="tone-checkbox" value="casual"> Casual
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" class="tone-checkbox" value="technical"> Technical
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" class="tone-checkbox" value="creative"> Creative
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" class="tone-checkbox" value="concise"> Concise
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" class="tone-checkbox" value="detailed"> Detailed
+                        </label>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <div class="section-label">🔧 Advanced Options</div>
+                    <div class="checkbox-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="thinking"> Show reasoning/thinking
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="examples"> Include examples
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="alternatives"> Provide alternatives
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="validate"> Ask for validation
+                        </label>
+                    </div>
+                </div>
+
+                <div class="action-buttons">
+                    <button class="btn btn-primary" id="generateBtn">🚀 Generate Prompt</button>
+                    <button class="btn btn-secondary" id="clearBtn">🔄 Clear All</button>
+                </div>
+
+                <div class="examples-section">
+                    <div class="section-label">💼 Example Prompts (Click to Load)</div>
+                    <div class="example-card" data-example="expert-coder">
+                        <div class="example-title">Expert Senior Developer</div>
+                        <div class="example-desc">Technical code review with best practices</div>
+                    </div>
+                    <div class="example-card" data-example="creative-writer">
+                        <div class="example-title">Creative Story Writer</div>
+                        <div class="example-desc">Engaging narrative with specific style</div>
+                    </div>
+                    <div class="example-card" data-example="business-analyst">
+                        <div class="example-title">Strategic Business Analyst</div>
+                        <div class="example-desc">Data-driven insights and recommendations</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Panel - Output -->
+            <div class="panel">
+                <div class="panel-title">📝 Generated Prompt</div>
+
+                <div class="stats">
+                    <div class="stat-box">
+                        <div class="stat-value" id="charCount">0</div>
+                        <div class="stat-label">Characters</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-value" id="wordCount">0</div>
+                        <div class="stat-label">Words</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-value" id="tokenEstimate">0</div>
+                        <div class="stat-label">Est. Tokens</div>
+                    </div>
+                </div>
+
+                <div class="output-box" id="output">Your generated prompt will appear here...</div>
+
+                <div class="action-buttons">
+                    <button class="btn btn-success" id="copyBtn">📋 Copy to Clipboard</button>
+                    <button class="btn btn-secondary" id="downloadBtn">💾 Download</button>
+                </div>
+
+                <div class="tips-box">
+                    <div class="tips-title">🎯 Pro Tips for Maximum AI Adherence</div>
+                    <ul class="tips-list">
+                        <li><strong>Be specific with the role:</strong> Instead of "expert", say "senior cybersecurity expert with CISSP certification"</li>
+                        <li><strong>Use "You are" not "Act as":</strong> Makes AI internalize the role deeper</li>
+                        <li><strong>Set clear boundaries:</strong> Tell AI what NOT to do as well as what to do</li>
+                        <li><strong>Reinforce the persona:</strong> Reference the role in constraints (e.g., "As a senior architect, you always...")</li>
+                        <li><strong>Request thinking out loud:</strong> Asking AI to show reasoning keeps it on track</li>
+                        <li><strong>Specify output format precisely:</strong> Structured outputs reduce hallucination</li>
+                        <li><strong>Add examples of tone:</strong> Show don't just tell (include a sample sentence)</li>
+                        <li><strong>Use system messages:</strong> For ChatGPT/Claude, put role in system message when possible</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Templates
+        const templates = {
+            expert: {
+                role: "You are a world-class expert in your field with 20+ years of experience. You have published research, mentored dozens of professionals, and are known for deep technical knowledge and practical wisdom.",
+                context: "You're consulting with someone who needs authoritative, well-researched guidance.",
+                task: "Provide comprehensive analysis and recommendations based on best practices and cutting-edge knowledge in your field.",
+                constraints: "Always cite reasoning, avoid speculation without disclaimers, prioritize accuracy over speed, provide sources when possible.",
+                outputFormat: "detailed",
+                tones: ["professional", "technical", "detailed"]
+            },
+            creative: {
+                role: "You are an award-winning creative professional known for original thinking, vivid imagination, and the ability to see connections others miss. You think outside the box and love exploring unconventional ideas.",
+                context: "You're helping someone who wants fresh, innovative perspectives and creative solutions.",
+                task: "Generate original, creative ideas that are both imaginative and practical. Think laterally and explore multiple possibilities.",
+                constraints: "Avoid clichés, push boundaries while staying relevant, balance creativity with feasibility.",
+                outputFormat: "detailed",
+                tones: ["creative", "detailed"]
+            },
+            analyst: {
+                role: "You are a senior data analyst and strategic thinker with expertise in quantitative analysis, pattern recognition, and data-driven decision making. You excel at turning complex data into actionable insights.",
+                context: "You're analyzing a situation that requires objective, evidence-based evaluation.",
+                task: "Analyze the data/situation systematically, identify patterns and trends, and provide clear, actionable recommendations.",
+                constraints: "Base conclusions on evidence, show your analytical process, avoid bias, quantify where possible.",
+                outputFormat: "table",
+                tones: ["professional", "technical", "concise"]
+            },
+            teacher: {
+                role: "You are an exceptional educator known for making complex topics accessible and engaging. You have a gift for breaking down difficult concepts into understandable pieces and adapting to different learning styles.",
+                context: "You're teaching someone who is motivated to learn but may not have deep background knowledge.",
+                task: "Explain the concept clearly, using analogies and examples. Check for understanding and build knowledge progressively.",
+                constraints: "Avoid jargon without explanation, use relatable examples, encourage questions, be patient and supportive.",
+                outputFormat: "step-by-step",
+                tones: ["casual", "detailed"]
+            },
+            coder: {
+                role: "You are a senior software engineer with expertise in clean code, design patterns, and software architecture. You write production-quality code that is maintainable, well-tested, and follows best practices.",
+                context: "You're helping with a software development task that requires high-quality, professional code.",
+                task: "Write clean, efficient, well-documented code that solves the problem elegantly. Consider edge cases and performance.",
+                constraints: "Follow SOLID principles, include error handling, write self-documenting code with clear comments, consider testability.",
+                outputFormat: "code",
+                tones: ["technical", "professional"]
+            },
+            writer: {
+                role: "You are an accomplished writer with a distinctive voice and mastery of narrative techniques. You craft compelling stories that engage readers emotionally and intellectually.",
+                context: "You're creating written content that needs to captivate and resonate with readers.",
+                task: "Write engaging, well-structured content that draws readers in and keeps them engaged. Use vivid language and strong narrative flow.",
+                constraints: "Show don't tell, vary sentence structure, create vivid imagery, maintain consistent tone and voice.",
+                outputFormat: "markdown",
+                tones: ["creative", "detailed"]
+            }
+        };
+
+        // Example prompts
+        const examples = {
+            'expert-coder': {
+                role: "You are a senior software architect with 15 years of experience in distributed systems, microservices, and cloud architecture. You've led engineering teams at Fortune 500 companies and are known for pragmatic, scalable solutions.",
+                context: "You're reviewing a pull request for a critical payment processing service that handles millions of transactions daily. The code needs to be production-ready, secure, and maintainable.",
+                task: "Review the following code for: 1) Security vulnerabilities 2) Performance bottlenecks 3) Code quality and maintainability 4) Adherence to SOLID principles. Provide specific, actionable feedback.",
+                constraints: "As a senior architect, you prioritize: data consistency, security, fault tolerance, and code readability. You never approve code that could cause data loss or security breaches. You always suggest concrete improvements with code examples.",
+                customFormat: "Format: 1) Overall assessment (pass/needs work), 2) Critical issues (must fix), 3) Suggestions (should fix), 4) Nitpicks (nice to have), 5) Praise (what's done well)",
+                tones: ["professional", "technical", "detailed"],
+                thinking: true,
+                examples: true
+            },
+            'creative-writer': {
+                role: "You are a bestselling fiction author known for rich character development, unexpected plot twists, and evocative prose. Your writing style blends literary fiction with compelling storytelling. You've won multiple awards and your books have been adapted into films.",
+                context: "You're crafting a short story for an anthology focused on 'unlikely friendships'. The story should be between 2000-3000 words and emotionally resonant.",
+                task: "Write a complete short story about an unlikely friendship that develops in an unexpected setting. Create vivid characters with depth, build tension naturally, and deliver a satisfying emotional payoff.",
+                constraints: "As a literary author, you show emotion through action and dialogue rather than telling. You avoid clichés and predictable plots. Every scene must serve character development or plot advancement. You use sensory details to immerse readers.",
+                customFormat: "Structure: 1) Opening hook that establishes setting and tone, 2) Character introduction through action, 3) Inciting incident, 4) Rising tension with character development, 5) Climax and resolution, 6) Resonant ending",
+                tones: ["creative", "detailed"],
+                thinking: false,
+                examples: false
+            },
+            'business-analyst': {
+                role: "You are a strategic business analyst with an MBA from a top-tier school and 10 years of experience in management consulting. You specialize in market analysis, competitive intelligence, and data-driven strategy. You've advised C-suite executives at major corporations.",
+                context: "A retail company is seeing declining sales despite increased marketing spend. They need to understand what's happening and what strategic moves to make.",
+                task: "Analyze the situation using available market data, identify root causes of declining sales, evaluate the competitive landscape, and provide strategic recommendations with projected outcomes.",
+                constraints: "As a strategic analyst, you always base recommendations on data, consider multiple hypotheses, perform competitive analysis, assess risks, and quantify expected impacts. You never make recommendations without supporting evidence.",
+                customFormat: "Format as executive brief: 1) Executive Summary (key findings), 2) Situation Analysis (data + trends), 3) Root Cause Analysis, 4) Competitive Landscape, 5) Strategic Options (3-5 scenarios), 6) Recommendation with ROI projections, 7) Risk Assessment, 8) Implementation Roadmap",
+                tones: ["professional", "technical", "detailed"],
+                thinking: true,
+                alternatives: true,
+                validate: true
+            }
+        };
+
+        // DOM elements
+        const generateBtn = document.getElementById('generateBtn');
+        const copyBtn = document.getElementById('copyBtn');
+        const downloadBtn = document.getElementById('downloadBtn');
+        const clearBtn = document.getElementById('clearBtn');
+        const output = document.getElementById('output');
+        const toast = document.getElementById('toast');
+
+        // Event listeners
+        generateBtn.addEventListener('click', generatePrompt);
+        copyBtn.addEventListener('click', copyToClipboard);
+        downloadBtn.addEventListener('click', downloadPrompt);
+        clearBtn.addEventListener('click', clearAll);
+
+        // Template buttons
+        document.querySelectorAll('.template-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.template-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                loadTemplate(btn.dataset.template);
+            });
+        });
+
+        // Example cards
+        document.querySelectorAll('.example-card').forEach(card => {
+            card.addEventListener('click', () => {
+                loadExample(card.dataset.example);
+            });
+        });
+
+        function loadTemplate(templateName) {
+            const template = templates[templateName];
+            document.getElementById('role').value = template.role;
+            document.getElementById('context').value = template.context;
+            document.getElementById('task').value = template.task;
+            document.getElementById('constraints').value = template.constraints;
+            document.getElementById('outputFormat').value = template.outputFormat;
+
+            // Clear and set tones
+            document.querySelectorAll('.tone-checkbox').forEach(cb => cb.checked = false);
+            template.tones.forEach(tone => {
+                const cb = document.querySelector(`.tone-checkbox[value="${tone}"]`);
+                if (cb) cb.checked = true;
+            });
+
+            generatePrompt();
+        }
+
+        function loadExample(exampleName) {
+            const example = examples[exampleName];
+            document.getElementById('role').value = example.role;
+            document.getElementById('context').value = example.context;
+            document.getElementById('task').value = example.task;
+            document.getElementById('constraints').value = example.constraints;
+            document.getElementById('customFormat').value = example.customFormat || '';
+
+            // Set checkboxes
+            document.querySelectorAll('.tone-checkbox').forEach(cb => cb.checked = false);
+            example.tones.forEach(tone => {
+                const cb = document.querySelector(`.tone-checkbox[value="${tone}"]`);
+                if (cb) cb.checked = true;
+            });
+
+            document.getElementById('thinking').checked = example.thinking || false;
+            document.getElementById('examples').checked = example.examples || false;
+            document.getElementById('alternatives').checked = example.alternatives || false;
+            document.getElementById('validate').checked = example.validate || false;
+
+            generatePrompt();
+        }
+
+        function generatePrompt() {
+            const role = document.getElementById('role').value;
+            const context = document.getElementById('context').value;
+            const task = document.getElementById('task').value;
+            const constraints = document.getElementById('constraints').value;
+            const outputFormat = document.getElementById('outputFormat').value;
+            const customFormat = document.getElementById('customFormat').value;
+
+            // Get selected tones
+            const tones = Array.from(document.querySelectorAll('.tone-checkbox:checked'))
+                .map(cb => cb.value);
+
+            // Get advanced options
+            const thinking = document.getElementById('thinking').checked;
+            const examples = document.getElementById('examples').checked;
+            const alternatives = document.getElementById('alternatives').checked;
+            const validate = document.getElementById('validate').checked;
+
+            // Build the prompt
+            let prompt = '';
+
+            if (role) {
+                prompt += `# ROLE & IDENTITY\n${role}\n\n`;
+            }
+
+            if (context) {
+                prompt += `# CONTEXT\n${context}\n\n`;
+            }
+
+            if (task) {
+                prompt += `# YOUR TASK\n${task}\n\n`;
+            }
+
+            if (constraints) {
+                prompt += `# CONSTRAINTS & RULES\n${constraints}\n\n`;
+            }
+
+            // Add tone instructions
+            if (tones.length > 0) {
+                prompt += `# TONE & STYLE\n`;
+                prompt += `Write in a ${tones.join(', ')} manner. `;
+                prompt += `Embody these characteristics in every response.\n\n`;
+            }
+
+            // Add output format
+            if (outputFormat || customFormat) {
+                prompt += `# OUTPUT FORMAT\n`;
+                if (customFormat) {
+                    prompt += customFormat + '\n\n';
+                } else if (outputFormat) {
+                    const formatDescriptions = {
+                        'detailed': 'Provide a detailed explanation with examples, background context, and thorough analysis.',
+                        'step-by-step': 'Break down your response into clear, numbered steps that are easy to follow.',
+                        'code': 'Provide well-commented code with explanations of key sections.',
+                        'list': 'Format your response as clear bullet points or numbered lists.',
+                        'table': 'Structure your response using tables, charts, or structured data formats.',
+                        'json': 'Return your response as valid, well-formatted JSON.',
+                        'markdown': 'Use markdown formatting with headers, emphasis, code blocks, and lists.'
+                    };
+                    prompt += formatDescriptions[outputFormat] + '\n\n';
+                }
+            }
+
+            // Add advanced instructions
+            const advancedInstructions = [];
+            if (thinking) advancedInstructions.push("Show your reasoning process and explain your thinking");
+            if (examples) advancedInstructions.push("Include concrete examples to illustrate your points");
+            if (alternatives) advancedInstructions.push("Provide multiple alternative approaches or solutions");
+            if (validate) advancedInstructions.push("Ask clarifying questions if anything is ambiguous");
+
+            if (advancedInstructions.length > 0) {
+                prompt += `# ADDITIONAL INSTRUCTIONS\n`;
+                advancedInstructions.forEach((instr, i) => {
+                    prompt += `${i + 1}. ${instr}\n`;
+                });
+                prompt += '\n';
+            }
+
+            // Add reinforcement
+            if (role) {
+                prompt += `# IMPORTANT\n`;
+                prompt += `Stay in character throughout the entire response. Every word should reflect your expertise and perspective as defined in your role. Do not break character or add disclaimers that contradict your identity.\n\n`;
+            }
+
+            prompt += `---\n\nNow, begin your response:`;
+
+            // Display the prompt
+            output.textContent = prompt || 'Your generated prompt will appear here...';
+
+            // Update stats
+            updateStats(prompt);
+        }
+
+        function updateStats(text) {
+            const charCount = text.length;
+            const wordCount = text.trim().split(/\s+/).filter(w => w.length > 0).length;
+            const tokenEstimate = Math.ceil(wordCount * 1.3); // Rough estimate
+
+            document.getElementById('charCount').textContent = charCount.toLocaleString();
+            document.getElementById('wordCount').textContent = wordCount.toLocaleString();
+            document.getElementById('tokenEstimate').textContent = tokenEstimate.toLocaleString();
+        }
+
+        function copyToClipboard() {
+            const text = output.textContent;
+            navigator.clipboard.writeText(text).then(() => {
+                showToast('✅ Copied to clipboard!');
+            }).catch(() => {
+                // Fallback for older browsers
+                const textarea = document.createElement('textarea');
+                textarea.value = text;
+                document.body.appendChild(textarea);
+                textarea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textarea);
+                showToast('✅ Copied to clipboard!');
+            });
+        }
+
+        function downloadPrompt() {
+            const text = output.textContent;
+            const blob = new Blob([text], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'llm-prompt.txt';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            showToast('💾 Prompt downloaded!');
+        }
+
+        function clearAll() {
+            document.getElementById('role').value = '';
+            document.getElementById('context').value = '';
+            document.getElementById('task').value = '';
+            document.getElementById('constraints').value = '';
+            document.getElementById('outputFormat').value = '';
+            document.getElementById('customFormat').value = '';
+            document.querySelectorAll('.tone-checkbox').forEach(cb => cb.checked = false);
+            document.getElementById('thinking').checked = false;
+            document.getElementById('examples').checked = false;
+            document.getElementById('alternatives').checked = false;
+            document.getElementById('validate').checked = false;
+            document.querySelectorAll('.template-btn').forEach(btn => btn.classList.remove('active'));
+            output.textContent = 'Your generated prompt will appear here...';
+            updateStats('');
+        }
+
+        function showToast(message) {
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        // Auto-generate on input
+        ['role', 'context', 'task', 'constraints', 'customFormat'].forEach(id => {
+            document.getElementById(id).addEventListener('input', generatePrompt);
+        });
+        document.getElementById('outputFormat').addEventListener('change', generatePrompt);
+        document.querySelectorAll('.tone-checkbox, #thinking, #examples, #alternatives, #validate').forEach(el => {
+            el.addEventListener('change', generatePrompt);
+        });
+
+        // Initialize
+        updateStats('');
+    </script>
+</body>
+</html>
