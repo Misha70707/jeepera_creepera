@@ -94,22 +94,7 @@ struct MainTabView: View {
     }
 }
 
-// MARK: - Placeholder Views (Phase 2 Implementation)
-
-struct HomeView: View {
-    var body: some View {
-        NavigationStack {
-            VStack {
-                Text("🏠 Home")
-                    .font(.largeTitle)
-                    .fontWeight(.bold)
-                Text("Routines & Quick Stats Coming Soon")
-                    .foregroundColor(.secondary)
-            }
-            .navigationTitle("Pulse")
-        }
-    }
-}
+// MARK: - HomeView is now in HomeView.swift
 
 struct RoutinesListView: View {
     var body: some View {
@@ -185,90 +170,8 @@ struct SettingsView: View {
 }
 
 struct OnboardingView: View {
-    @EnvironmentObject var authService: AuthService
-    @State private var isLoading = false
-
     var body: some View {
-        VStack(spacing: 32) {
-            Spacer()
-
-            // Logo & Title
-            VStack(spacing: 16) {
-                Text("Pulse")
-                    .font(.system(size: 48, weight: .bold))
-                    .foregroundColor(.pulseAccent)
-
-                Text("Your Personal AI Assistant\nfor Daily Excellence")
-                    .font(.system(size: 20, weight: .semibold))
-                    .multilineTextAlignment(.center)
-                    .foregroundColor(.primary)
-
-                Text("Automate habits, connect with\ncommunities, unlock your potential.")
-                    .font(.system(size: 16))
-                    .multilineTextAlignment(.center)
-                    .foregroundColor(.secondary)
-            }
-
-            Spacer()
-
-            // Sign In Buttons
-            VStack(spacing: 12) {
-                Button(action: { handleAppleSignIn() }) {
-                    HStack {
-                        Image(systemName: "apple.logo")
-                        Text("Sign in with Apple")
-                    }
-                    .frame(maxWidth: .infinity)
-                    .padding(12)
-                    .background(Color.black)
-                    .foregroundColor(.white)
-                    .cornerRadius(8)
-                }
-                .disabled(isLoading)
-
-                Button(action: { handleGoogleSignIn() }) {
-                    HStack {
-                        Image(systemName: "g.circle")
-                        Text("Sign in with Google")
-                    }
-                    .frame(maxWidth: .infinity)
-                    .padding(12)
-                    .background(Color.gray.opacity(0.1))
-                    .foregroundColor(.primary)
-                    .cornerRadius(8)
-                }
-                .disabled(isLoading)
-            }
-
-            // Privacy Notice
-            Text("Privacy-first. On-device. Yours.")
-                .font(.system(size: 12))
-                .foregroundColor(.secondary)
-                .padding(.top, 8)
-
-            Spacer()
-        }
-        .padding(24)
-    }
-
-    private func handleAppleSignIn() {
-        isLoading = true
-        authService.signInWithApple { result in
-            isLoading = false
-            if case .success = result {
-                // Navigation handled by @EnvironmentObject
-            }
-        }
-    }
-
-    private func handleGoogleSignIn() {
-        isLoading = true
-        authService.signInWithGoogle { result in
-            isLoading = false
-            if case .success = result {
-                // Navigation handled by @EnvironmentObject
-            }
-        }
+        OnboardingContainerView()
     }
 }
 
