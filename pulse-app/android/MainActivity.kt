@@ -126,138 +126,31 @@ enum class NavigationTab(val label: String) {
     Settings("Settings")
 }
 
-// MARK: - Placeholder Screens (Phase 2 Implementation)
+// MARK: - Screen Implementations (Phase 2 Complete)
 
 @Composable
 fun HomeScreen(routineViewModel: RoutineViewModel) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp)
-            .background(PulseColors.darkBg),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        Text(
-            text = "🏠 Home",
-            fontSize = 32.sp,
-            fontWeight = FontWeight.Bold,
-            color = PulseColors.text
-        )
-        Spacer(modifier = Modifier.height(16.dp))
-        Text(
-            text = "Routines & Quick Stats Coming Soon",
-            color = PulseColors.secondary
-        )
-    }
+    HomeScreenContent()
 }
 
 @Composable
 fun RoutinesListScreen(routineViewModel: RoutineViewModel) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp)
-            .background(PulseColors.darkBg),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        Text(
-            text = "📋 Routines",
-            fontSize = 32.sp,
-            fontWeight = FontWeight.Bold,
-            color = PulseColors.text
-        )
-        Spacer(modifier = Modifier.height(16.dp))
-        Text(
-            text = "Routine Management Coming Soon",
-            color = PulseColors.secondary
-        )
-    }
+    RoutinesListScreenContent()
 }
 
 @Composable
 fun CommunityFeedScreen() {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp)
-            .background(PulseColors.darkBg),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        Text(
-            text = "👥 Community",
-            fontSize = 32.sp,
-            fontWeight = FontWeight.Bold,
-            color = PulseColors.text
-        )
-        Spacer(modifier = Modifier.height(16.dp))
-        Text(
-            text = "Community Feed Coming Soon",
-            color = PulseColors.secondary
-        )
-    }
+    CommunityScreenContent()
 }
 
 @Composable
 fun AchievementsScreen() {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp)
-            .background(PulseColors.darkBg),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        Text(
-            text = "🏆 Achievements",
-            fontSize = 32.sp,
-            fontWeight = FontWeight.Bold,
-            color = PulseColors.text
-        )
-        Spacer(modifier = Modifier.height(16.dp))
-        Text(
-            text = "Badges & Streaks Coming Soon",
-            color = PulseColors.secondary
-        )
-    }
+    AchievementsScreenContent()
 }
 
 @Composable
 fun SettingsScreen(authViewModel: AuthViewModel) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp)
-            .background(PulseColors.darkBg),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        Text(
-            text = "⚙️ Settings",
-            fontSize = 32.sp,
-            fontWeight = FontWeight.Bold,
-            color = PulseColors.text
-        )
-        Spacer(modifier = Modifier.height(24.dp))
-
-        Button(
-            onClick = { authViewModel.signOut() },
-            colors = ButtonDefaults.buttonColors(containerColor = Color.Red),
-            modifier = Modifier
-                .width(200.dp)
-                .height(48.dp)
-        ) {
-            Text("Sign Out", color = Color.White)
-        }
-
-        Spacer(modifier = Modifier.height(16.dp))
-        Text(
-            text = "Settings Coming Soon",
-            color = PulseColors.secondary
-        )
-    }
+    SettingsScreenContent(authService = authViewModel)
 }
 
 // MARK: - Theme & Colors
