@@ -2,8 +2,19 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>Focus & Energy Frequency Therapy</title>
+
+    <!-- PWA & Mobile Optimization -->
+    <meta name="theme-color" content="#667eea">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Focus Therapy">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="description" content="Brainwave frequencies for focus, productivity, and peak performance">
+
+    <!-- Prevent phone from sleeping -->
+    <meta name="screen-wake-lock" content="active">
     <style>
         * {
             margin: 0;
@@ -20,6 +31,10 @@
             justify-content: center;
             align-items: center;
             padding: 20px;
+            -webkit-user-select: none;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
         }
 
         .container {

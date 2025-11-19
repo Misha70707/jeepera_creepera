@@ -2,8 +2,19 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>Sleep & Healing Frequency Therapy</title>
+
+    <!-- PWA & Mobile Optimization -->
+    <meta name="theme-color" content="#1a1a2e">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Sleep Therapy">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="description" content="Healing frequencies for deep sleep, regeneration, and chakra balance">
+
+    <!-- Prevent phone from sleeping -->
+    <meta name="screen-wake-lock" content="active">
     <style>
         * {
             margin: 0;
@@ -20,6 +31,10 @@
             justify-content: center;
             align-items: center;
             padding: 20px;
+            -webkit-user-select: none;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
         }
 
         .container {
