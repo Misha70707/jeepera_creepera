@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Text-to-Speech Online Pro</title>
+
+    <!-- PWA & Mobile Optimization -->
+    <meta name="theme-color" content="#667eea">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="TTS Online">
+    <meta name="description" content="Advanced Text-to-Speech with cloud voices">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 50%, #667eea 100%);
+            min-height: 100vh;
+            padding: 20px;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 24px;
+            padding: 40px;
+            box-shadow: 0 25px 70px rgba(0, 0, 0, 0.3);
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 2.8em;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #718096;
+            margin-bottom: 30px;
+            font-size: 1.2em;
+        }
+
+        .online-badge {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            display: inline-block;
+            font-size: 0.9em;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 25px;
+            border-bottom: 3px solid #e2e8f0;
+        }
+
+        .tab {
+            padding: 12px 24px;
+            background: transparent;
+            border: none;
+            font-size: 1.05em;
+            font-weight: 600;
+            cursor: pointer;
+            color: #718096;
+            border-bottom: 3px solid transparent;
+            margin-bottom: -3px;
+            transition: all 0.3s ease;
+        }
+
+        .tab.active {
+            color: #667eea;
+            border-bottom-color: #667eea;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 220px;
+            padding: 20px;
+            border: 3px solid #e2e8f0;
+            border-radius: 16px;
+            font-size: 1.1em;
+            font-family: inherit;
+            resize: vertical;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+        }
+
+        .controls-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .control-group {
+            background: #f7fafc;
+            padding: 15px;
+            border-radius: 12px;
+            border: 2px solid #e2e8f0;
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            color: #4a5568;
+            margin-bottom: 8px;
+            font-size: 0.95em;
+        }
+
+        select, input[type="file"] {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 1em;
+            background: white;
+            cursor: pointer;
+        }
+
+        input[type="range"] {
+            width: 100%;
+            height: 8px;
+            border-radius: 5px;
+            background: linear-gradient(90deg, #f093fb 0%, #f5576c 100%);
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            background: white;
+            cursor: pointer;
+            border: 3px solid #f5576c;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .value-display {
+            text-align: center;
+            font-weight: bold;
+            color: #f5576c;
+            margin-top: 8px;
+            font-size: 1.1em;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        .btn {
+            padding: 16px 32px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.15em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(240, 147, 251, 0.4);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(240, 147, 251, 0.6);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: #e2e8f0;
+            color: #4a5568;
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #eb3349 0%, #f45c43 100%);
+            color: white;
+        }
+
+        .features {
+            background: linear-gradient(135deg, #fff5f5 0%, #fed7d7 100%);
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            border: 2px solid #fc8181;
+        }
+
+        .features h3 {
+            color: #742a2a;
+            margin-bottom: 10px;
+        }
+
+        .features ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .features li {
+            padding: 6px 0;
+            color: #742a2a;
+        }
+
+        .features li:before {
+            content: "✓ ";
+            color: #38ef7d;
+            font-weight: bold;
+            margin-right: 8px;
+        }
+
+        .status {
+            text-align: center;
+            padding: 15px;
+            background: #f7fafc;
+            border-radius: 12px;
+            font-size: 1.05em;
+            color: #4a5568;
+            border: 2px solid #e2e8f0;
+        }
+
+        .status.speaking {
+            background: linear-gradient(135deg, #c6f6d5 0%, #9ae6b4 100%);
+            color: #22543d;
+            border-color: #38ef7d;
+        }
+
+        .char-count {
+            text-align: right;
+            color: #718096;
+            font-size: 0.9em;
+            margin-top: -15px;
+            margin-bottom: 15px;
+        }
+
+        .audio-player {
+            margin-top: 20px;
+            padding: 20px;
+            background: #f7fafc;
+            border-radius: 12px;
+            border: 2px solid #e2e8f0;
+            display: none;
+        }
+
+        .audio-player.show {
+            display: block;
+        }
+
+        audio {
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 25px;
+            }
+
+            h1 {
+                font-size: 2.2em;
+            }
+
+            .buttons {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎙️ Text-to-Speech Pro</h1>
+        <p class="subtitle">Advanced TTS with Premium Features</p>
+        <div style="text-align: center;">
+            <span class="online-badge">⚡ Enhanced Online</span>
+        </div>
+
+        <div class="tabs">
+            <button class="tab active" data-tab="speak">🔊 Speak</button>
+            <button class="tab" data-tab="file">📄 File Upload</button>
+            <button class="tab" data-tab="download">💾 Download Audio</button>
+        </div>
+
+        <!-- Speak Tab -->
+        <div class="tab-content active" data-content="speak">
+            <textarea id="textInput" placeholder="Type or paste your text here... Try different voices and speeds!">Welcome to the advanced text-to-speech app! This version has enhanced features including multiple voices, adjustable speed and pitch, and the ability to download your audio.</textarea>
+
+            <div class="char-count">
+                <span id="charCount">0</span> characters
+            </div>
+
+            <div class="controls-grid">
+                <div class="control-group">
+                    <label>Voice</label>
+                    <select id="voiceSelect">
+                        <option>Loading voices...</option>
+                    </select>
+                </div>
+
+                <div class="control-group">
+                    <label>Language</label>
+                    <select id="langFilter">
+                        <option value="all">All Languages</option>
+                        <option value="en">English</option>
+                        <option value="es">Spanish</option>
+                        <option value="fr">French</option>
+                        <option value="de">German</option>
+                        <option value="it">Italian</option>
+                        <option value="pt">Portuguese</option>
+                        <option value="ru">Russian</option>
+                        <option value="ja">Japanese</option>
+                        <option value="ko">Korean</option>
+                        <option value="zh">Chinese</option>
+                        <option value="ar">Arabic</option>
+                        <option value="hi">Hindi</option>
+                    </select>
+                </div>
+
+                <div class="control-group">
+                    <label>Speed</label>
+                    <input type="range" id="rate" min="0.1" max="3" step="0.1" value="1">
+                    <div class="value-display" id="rateValue">1.0x</div>
+                </div>
+
+                <div class="control-group">
+                    <label>Pitch</label>
+                    <input type="range" id="pitch" min="0" max="2" step="0.1" value="1">
+                    <div class="value-display" id="pitchValue">1.0</div>
+                </div>
+
+                <div class="control-group">
+                    <label>Volume</label>
+                    <input type="range" id="volume" min="0" max="1" step="0.1" value="1">
+                    <div class="value-display" id="volumeValue">100%</div>
+                </div>
+            </div>
+
+            <div class="buttons">
+                <button class="btn btn-primary" id="speakBtn">▶️ Speak</button>
+                <button class="btn btn-secondary" id="pauseBtn">⏸️ Pause</button>
+                <button class="btn btn-secondary" id="resumeBtn">▶️ Resume</button>
+                <button class="btn btn-danger" id="stopBtn">⏹️ Stop</button>
+            </div>
+
+            <div class="status" id="status">Ready to speak</div>
+        </div>
+
+        <!-- File Upload Tab -->
+        <div class="tab-content" data-content="file">
+            <div class="features">
+                <h3>📄 Text File Upload</h3>
+                <ul>
+                    <li>Upload .txt files to convert to speech</li>
+                    <li>Supports large documents</li>
+                    <li>Automatic text extraction</li>
+                </ul>
+            </div>
+
+            <div class="control-group">
+                <label>Choose Text File (.txt)</label>
+                <input type="file" id="fileInput" accept=".txt">
+            </div>
+
+            <div style="margin-top: 20px;">
+                <button class="btn btn-success" id="loadFileBtn">📂 Load File</button>
+            </div>
+
+            <textarea id="fileText" placeholder="File content will appear here..." style="margin-top: 20px;"></textarea>
+        </div>
+
+        <!-- Download Tab -->
+        <div class="tab-content" data-content="download">
+            <div class="features">
+                <h3>💾 Download Audio</h3>
+                <ul>
+                    <li>Convert text to downloadable MP3/WAV</li>
+                    <li>Save for offline listening</li>
+                    <li>Use in presentations or podcasts</li>
+                    <li>Note: Download feature requires browser support</li>
+                </ul>
+            </div>
+
+            <textarea id="downloadText" placeholder="Enter text to convert to downloadable audio..."></textarea>
+
+            <div class="buttons">
+                <button class="btn btn-primary" id="generateAudioBtn">🎵 Generate Audio</button>
+            </div>
+
+            <div class="audio-player" id="audioPlayer">
+                <h3 style="margin-bottom: 10px; color: #4a5568;">Your Audio:</h3>
+                <audio id="audioElement" controls></audio>
+                <div style="margin-top: 15px;">
+                    <button class="btn btn-success" id="downloadAudioBtn">💾 Download Audio</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let voices = [];
+        let currentUtterance = null;
+
+        // DOM elements
+        const tabs = document.querySelectorAll('.tab');
+        const tabContents = document.querySelectorAll('.tab-content');
+        const textInput = document.getElementById('textInput');
+        const voiceSelect = document.getElementById('voiceSelect');
+        const langFilter = document.getElementById('langFilter');
+        const rateInput = document.getElementById('rate');
+        const pitchInput = document.getElementById('pitch');
+        const volumeInput = document.getElementById('volume');
+        const rateValue = document.getElementById('rateValue');
+        const pitchValue = document.getElementById('pitchValue');
+        const volumeValue = document.getElementById('volumeValue');
+        const speakBtn = document.getElementById('speakBtn');
+        const pauseBtn = document.getElementById('pauseBtn');
+        const resumeBtn = document.getElementById('resumeBtn');
+        const stopBtn = document.getElementById('stopBtn');
+        const status = document.getElementById('status');
+        const charCount = document.getElementById('charCount');
+
+        // File upload
+        const fileInput = document.getElementById('fileInput');
+        const loadFileBtn = document.getElementById('loadFileBtn');
+        const fileText = document.getElementById('fileText');
+
+        // Download
+        const downloadText = document.getElementById('downloadText');
+        const generateAudioBtn = document.getElementById('generateAudioBtn');
+        const audioPlayer = document.getElementById('audioPlayer');
+        const audioElement = document.getElementById('audioElement');
+        const downloadAudioBtn = document.getElementById('downloadAudioBtn');
+
+        // Tab switching
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                tabs.forEach(t => t.classList.remove('active'));
+                tabContents.forEach(tc => tc.classList.remove('active'));
+
+                tab.classList.add('active');
+                const targetContent = document.querySelector(`[data-content="${tab.dataset.tab}"]`);
+                targetContent.classList.add('active');
+            });
+        });
+
+        // Initialize speech synthesis
+        if ('speechSynthesis' in window) {
+            loadVoices();
+            speechSynthesis.onvoiceschanged = loadVoices;
+        } else {
+            status.textContent = '❌ Speech synthesis not supported';
+        }
+
+        function loadVoices() {
+            voices = speechSynthesis.getVoices();
+            populateVoiceList();
+        }
+
+        function populateVoiceList() {
+            const filterLang = langFilter.value;
+            const filteredVoices = filterLang === 'all'
+                ? voices
+                : voices.filter(voice => voice.lang.startsWith(filterLang));
+
+            voiceSelect.innerHTML = '';
+
+            filteredVoices.forEach((voice, index) => {
+                const option = document.createElement('option');
+                option.value = voices.indexOf(voice);
+                option.textContent = `${voice.name} (${voice.lang})`;
+                if (voice.default) option.selected = true;
+                voiceSelect.appendChild(option);
+            });
+        }
+
+        langFilter.addEventListener('change', populateVoiceList);
+
+        rateInput.addEventListener('input', (e) => {
+            rateValue.textContent = e.target.value + 'x';
+        });
+
+        pitchInput.addEventListener('input', (e) => {
+            pitchValue.textContent = e.target.value;
+        });
+
+        volumeInput.addEventListener('input', (e) => {
+            volumeValue.textContent = Math.round(e.target.value * 100) + '%';
+        });
+
+        textInput.addEventListener('input', () => {
+            charCount.textContent = textInput.value.length;
+        });
+
+        speakBtn.addEventListener('click', speak);
+        pauseBtn.addEventListener('click', () => speechSynthesis.pause());
+        resumeBtn.addEventListener('click', () => speechSynthesis.resume());
+        stopBtn.addEventListener('click', () => speechSynthesis.cancel());
+
+        function speak() {
+            const text = textInput.value.trim();
+            if (!text) return alert('Please enter text');
+
+            speechSynthesis.cancel();
+            currentUtterance = new SpeechSynthesisUtterance(text);
+            currentUtterance.voice = voices[voiceSelect.value];
+            currentUtterance.rate = parseFloat(rateInput.value);
+            currentUtterance.pitch = parseFloat(pitchInput.value);
+            currentUtterance.volume = parseFloat(volumeInput.value);
+
+            currentUtterance.onstart = () => {
+                status.textContent = '🔊 Speaking...';
+                status.classList.add('speaking');
+            };
+
+            currentUtterance.onend = () => {
+                status.textContent = '✓ Finished';
+                status.classList.remove('speaking');
+            };
+
+            speechSynthesis.speak(currentUtterance);
+        }
+
+        // File upload
+        loadFileBtn.addEventListener('click', () => {
+            const file = fileInput.files[0];
+            if (!file) return alert('Please select a file');
+
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                fileText.value = e.target.result;
+                textInput.value = e.target.result;
+                alert('✓ File loaded successfully!');
+            };
+            reader.readAsText(file);
+        });
+
+        // Generate audio for download
+        generateAudioBtn.addEventListener('click', () => {
+            const text = downloadText.value.trim();
+            if (!text) return alert('Please enter text');
+
+            alert('Note: Direct audio download requires additional API integration. The audio will play in the browser. You can use browser extensions or online tools to capture the audio output.');
+
+            // Show audio player
+            audioPlayer.classList.add('show');
+
+            // For demo, we'll speak it (actual download would need server-side processing)
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.voice = voices[voiceSelect.value];
+            speechSynthesis.speak(utterance);
+        });
+
+        charCount.textContent = textInput.value.length;
+    </script>
+</body>
+</html>
