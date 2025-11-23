@@ -6,7 +6,7 @@ ai:
   provider: "ollama"  # Use local model (FREE!)
 
   # Ollama settings (LOCAL - 100% FREE!)
-  ollama_model: "deepseek-coder:6.7b"  # Great for coding, runs on RTX 3050
+  ollama_model: "qwen:1.7b"  # Lightweight, efficient for laptops
   ollama_base_url: "http://localhost:11434"  # Default Ollama URL
 
   # Anthropic settings (API - costs money)
