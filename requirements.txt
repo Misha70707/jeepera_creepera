@@ -50,15 +50,15 @@ pytest>=8.0.0
 pytest-asyncio>=0.23.0
 pytest-cov>=4.1.0
 
-# MCP Protocol (Model Context Protocol)
-mcp>=0.1.0
+# MCP Protocol (Model Context Protocol) - Optional
+# mcp>=0.1.0  # Uncomment if you want MCP support
 
 # Social Media & Marketing APIs
 tweepy>=4.14.0  # Twitter
 google-api-python-client>=2.117.0  # YouTube, etc.
 
-# Survey & Forms
-google-forms-api>=0.1.0
+# Survey & Forms (API integration coming later)
+# Note: Survey features will use web scraping or direct API calls
 
 # Payment Processing (for when Nexus sells products)
 stripe>=8.0.0
