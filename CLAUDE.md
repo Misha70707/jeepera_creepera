@@ -1,10 +1,10 @@
 # CLAUDE.md - AI Assistant Guide
 
-This document provides comprehensive guidance for AI assistants working with the `tweny_fo_seven_trees_ixty_five` repository.
+This document provides comprehensive guidance for AI assistants working with the `tweny_fo_seven_tree_sixty_five` repository.
 
 ## Repository Overview
 
-**Name:** tweny_fo_seven_trees_ixty_five
+**Name:** tweny_fo_seven_tree_sixty_five
 **Description:** Top Secret
 **License:** Apache License 2.0
 **Status:** Early stage - minimal structure established
@@ -28,7 +28,7 @@ This repository is designed for **MetaTrader 5 (MT5) Algorithmic Trading** devel
 ## Repository Structure
 
 ```
-tweny_fo_seven_trees_ixty_five/
+tweny_fo_seven_tree_sixty_five/
 ├── .git/                 # Git version control
 ├── .gitattributes        # Git text normalization (LF line endings)
 ├── .gitignore           # JetBrains MPS exclusions
@@ -39,7 +39,10 @@ tweny_fo_seven_trees_ixty_five/
 
 ### Current State
 - **No source code yet** - repository contains only configuration files
-- **Single commit** - "Initial commit" (5dec970)
+- **Recent commits:**
+  - `f04d4ac` - docs: Add MT5, MQL5, Neural Networks, and Neuroplastic modules
+  - `bbfaf54` - docs: Add comprehensive CLAUDE.md for AI assistant guidance
+  - `5dec970` - Initial commit
 - **Clean working directory** - no uncommitted changes
 
 ## Development Workflow
@@ -50,7 +53,7 @@ tweny_fo_seven_trees_ixty_five/
 
 **Current Development Branch:**
 ```
-claude/claude-md-mhy3268tuaj600yz-013AKvQszRVaxYTr5bqk47FN
+claude/claude-md-miis42nd7yoldh57-01Uk4sT3UWtBdKwGwXoWuspA
 ```
 
 **Branch Naming Pattern:**
@@ -63,7 +66,7 @@ claude/claude-md-mhy3268tuaj600yz-013AKvQszRVaxYTr5bqk47FN
 #### Pushing Changes
 ```bash
 # Always use -u flag for first push to set upstream
-git push -u origin claude/claude-md-mhy3268tuaj600yz-013AKvQszRVaxYTr5bqk47FN
+git push -u origin claude/claude-md-miis42nd7yoldh57-01Uk4sT3UWtBdKwGwXoWuspA
 
 # CRITICAL: Branch must follow naming convention or push will fail with 403
 ```
@@ -75,10 +78,10 @@ git push -u origin claude/claude-md-mhy3268tuaj600yz-013AKvQszRVaxYTr5bqk47FN
 #### Fetching/Pulling
 ```bash
 # Fetch specific branch
-git fetch origin claude/claude-md-mhy3268tuaj600yz-013AKvQszRVaxYTr5bqk47FN
+git fetch origin claude/claude-md-miis42nd7yoldh57-01Uk4sT3UWtBdKwGwXoWuspA
 
 # Pull specific branch
-git pull origin claude/claude-md-mhy3268tuaj600yz-013AKvQszRVaxYTr5bqk47FN
+git pull origin claude/claude-md-miis42nd7yoldh57-01Uk4sT3UWtBdKwGwXoWuspA
 ```
 
 ### Commit Guidelines
@@ -114,7 +117,7 @@ EOF
 
 1. **Ensure you're on the correct branch:**
    ```bash
-   git checkout claude/claude-md-mhy3268tuaj600yz-013AKvQszRVaxYTr5bqk47FN
+   git checkout claude/claude-md-miis42nd7yoldh57-01Uk4sT3UWtBdKwGwXoWuspA
    ```
 
 2. **Make changes and stage:**
@@ -132,7 +135,7 @@ EOF
 
 4. **Push to remote:**
    ```bash
-   git push -u origin claude/claude-md-mhy3268tuaj600yz-013AKvQszRVaxYTr5bqk47FN
+   git push -u origin claude/claude-md-miis42nd7yoldh57-01Uk4sT3UWtBdKwGwXoWuspA
    ```
 
 ## AI Assistant Conventions
@@ -188,7 +191,7 @@ Given the MPS-focused `.gitignore`, future development will likely include:
 
 ### Potential Directory Structure
 ```
-tweny_fo_seven_trees_ixty_five/
+tweny_fo_seven_tree_sixty_five/
 ├── MQL5/                          # MetaTrader 5 code
 │   ├── Experts/                   # Expert Advisors (EAs)
 │   ├── Indicators/                # Custom indicators
@@ -1071,9 +1074,9 @@ The `gh` CLI tool is **not available** in this environment. For GitHub operation
 ## Environment Details
 
 - **Platform:** Linux 4.4.0
-- **Working Directory:** `/home/user/tweny_fo_seven_trees_ixty_five`
+- **Working Directory:** `/home/user/tweny_fo_seven_tree_sixty_five`
 - **Git Status:** Clean working directory
-- **Current Branch:** `claude/claude-md-mhy3268tuaj600yz-013AKvQszRVaxYTr5bqk47FN`
+- **Current Branch:** `claude/claude-md-miis42nd7yoldh57-01Uk4sT3UWtBdKwGwXoWuspA`
 
 ## Quick Reference
 
@@ -1128,11 +1131,18 @@ If you're developing this repository, consider documenting:
 
 ---
 
-**Last Updated:** 2025-11-14
-**Document Version:** 2.0.0
-**Branch:** claude/claude-md-mhy3268tuaj600yz-013AKvQszRVaxYTr5bqk47FN
+**Last Updated:** 2025-11-28
+**Document Version:** 2.1.0
+**Branch:** claude/claude-md-miis42nd7yoldh57-01Uk4sT3UWtBdKwGwXoWuspA
 
 ## Changelog
+
+### Version 2.1.0 (2025-11-28)
+- Updated repository name to correct spelling: `tweny_fo_seven_tree_sixty_five`
+- Updated current branch to: `claude/claude-md-miis42nd7yoldh57-01Uk4sT3UWtBdKwGwXoWuspA`
+- Updated commit history to reflect all three commits
+- Corrected all directory paths and references throughout the document
+- Updated environment details and working directory path
 
 ### Version 2.0.0 (2025-11-14)
 - Added comprehensive MetaTrader 5 (MT5) deep knowledge section
