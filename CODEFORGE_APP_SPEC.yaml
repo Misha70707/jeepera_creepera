@@ -1,0 +1,1211 @@
+app_specification:
+  version: "2.0.0"
+  last_updated: "2025-11-28"
+
+  # ============================================================================
+  # PRODUCT DEFINITION
+  # ============================================================================
+
+  product:
+    app_name: CodeForge AI
+    tagline: "Your Elite Full-Stack Coding Partner – Always in Your Pocket"
+
+    short_description: |
+      CodeForge AI is the ultimate mobile coding assistant powered by an elite AI agent.
+      Get instant, production-ready code, architecture advice, debugging help, and mentorship
+      directly on your phone – for web, mobile, backend, DevOps, security, and more.
+
+    long_description: |
+      Whether you're stuck on a bug at 2 AM, designing a new microservices architecture on the train,
+      or learning a new framework during lunch, CodeForge AI brings the power of an expert senior engineer
+      to your fingertips.
+
+      Features:
+      • Full-stack AI assistance (React, Node.js, Python, Flutter, Swift, Kotlin, Go, Rust, etc.)
+      • Real-time code generation with multi-language syntax highlighting
+      • Interactive architecture diagrams (ASCII, Mermaid, PlantUML export)
+      • Instant debugging with stack trace analysis
+      • Security vulnerability scanning (OWASP Top 10 coverage)
+      • Performance profiling suggestions
+      • Offline-first with 5000+ code snippets & project templates
+      • Voice-to-code with natural language understanding
+      • Multi-project workspaces with cloud sync
+      • Git integration (GitHub, GitLab, Bitbucket)
+      • Dark/light/high-contrast themes
+      • Full accessibility (WCAG 2.1 AA compliant)
+      • Multi-language support (English, Spanish, French, German, Japanese, Chinese)
+
+    value_proposition:
+      primary: "Senior-level coding expertise, instantly accessible on mobile"
+      secondary:
+        - "Learn faster with real-time mentorship"
+        - "Ship code faster with AI-powered generation"
+        - "Debug smarter with intelligent error analysis"
+        - "Stay secure with automated vulnerability detection"
+
+  # ============================================================================
+  # TARGET PLATFORMS & TECHNICAL REQUIREMENTS
+  # ============================================================================
+
+  platforms:
+    primary:
+      - platform: Android
+        distribution: Google Play Store
+        min_sdk: 24  # Android 7.0 Nougat (covers 95%+ devices)
+        target_sdk: 35  # Android 15
+        language: Kotlin 1.9+
+        ui_framework: Jetpack Compose
+        architecture: MVVM + Clean Architecture
+        build_system: Gradle 8.5+ with Kotlin DSL
+
+      - platform: iOS
+        distribution: Apple App Store
+        min_version: "15.0"  # Covers 95%+ devices
+        target_version: "18.0"
+        language: Swift 5.9+
+        ui_framework: SwiftUI
+        architecture: MVVM + Clean Architecture
+        build_system: Xcode 15+
+
+    secondary:
+      - platform: Progressive Web App
+        purpose: Fallback for unsupported devices
+        frameworks: React 18 + TypeScript
+        pwa_features: Offline caching, push notifications, install prompt
+
+    cross_platform_consideration: |
+      Flutter 3.16+ or React Native 0.73+ acceptable IF:
+      - Native performance parity achieved (60fps UI, <100ms response)
+      - Platform-specific UI guidelines followed (Material 3 + iOS HIG)
+      - Hot reload supported for development
+      - Native module integration straightforward
+
+  technical_stack:
+    frontend_android:
+      core:
+        - Kotlin 1.9+
+        - Jetpack Compose (Material 3 Design)
+        - Kotlin Coroutines + Flow
+      architecture:
+        - Clean Architecture (Domain/Data/Presentation layers)
+        - MVVM pattern
+        - Hilt for Dependency Injection
+      storage:
+        - Room Database (SQLite wrapper)
+        - DataStore (preferences)
+        - Encrypted SharedPreferences (sensitive data)
+      networking:
+        - Retrofit + OkHttp
+        - Ktor Client (WebSocket for streaming)
+        - Coil (image loading)
+      code_editor:
+        - CodeMirror Mobile or custom syntax highlighter
+        - Tree-sitter for parsing
+      testing:
+        - JUnit 5 + Kotest
+        - Espresso (UI tests)
+        - MockK (mocking)
+
+    frontend_ios:
+      core:
+        - Swift 5.9+
+        - SwiftUI (iOS 15+ features)
+        - Swift Concurrency (async/await)
+      architecture:
+        - Clean Architecture
+        - MVVM pattern
+        - Swift Package Manager for dependencies
+      storage:
+        - Core Data (primary database)
+        - UserDefaults (preferences)
+        - Keychain (sensitive data)
+      networking:
+        - URLSession + Combine
+        - Starscream (WebSocket)
+        - Kingfisher (image loading)
+      code_editor:
+        - Runestone or Highlightr (syntax highlighting)
+      testing:
+        - XCTest + Quick/Nimble
+        - XCUITest (UI tests)
+
+    backend_api:
+      architecture: Microservices (containerized)
+      primary_endpoint: https://api.codeforge.ai/v1
+      protocols:
+        - REST API (HTTPS)
+        - WebSocket (WSS for streaming responses)
+        - gRPC (internal services only)
+      authentication:
+        - OAuth 2.0 + PKCE flow
+        - JWT tokens (access + refresh)
+        - Token rotation every 15 minutes
+      rate_limiting:
+        free_tier: 100 requests/day, 10 req/min burst
+        pro_tier: Unlimited, 100 req/min burst
+        websocket: 1 concurrent connection per user
+
+      api_contract:
+        versioning: Semantic versioning in URL path (/v1, /v2)
+        format: JSON (application/json)
+        error_format: RFC 7807 Problem Details
+        pagination: Cursor-based for lists
+        compression: Gzip enabled
+
+      endpoints:
+        - POST /v1/chat/completion (streaming via SSE)
+        - POST /v1/code/generate
+        - POST /v1/code/debug
+        - POST /v1/code/review
+        - POST /v1/architecture/design
+        - GET /v1/projects (list user projects)
+        - POST /v1/projects (create project)
+        - GET /v1/projects/:id (get project details)
+        - PUT /v1/projects/:id (update project)
+        - DELETE /v1/projects/:id (delete project)
+        - POST /v1/snippets/search (search offline snippets)
+        - GET /v1/user/usage (usage statistics)
+
+    cloud_infrastructure:
+      primary_cloud: Google Cloud Platform (GCP) or AWS
+      services:
+        - Cloud Run / ECS Fargate (container hosting)
+        - Cloud SQL / RDS (PostgreSQL for user data)
+        - Cloud Storage / S3 (project files, exports)
+        - Cloud CDN / CloudFront (static assets)
+        - Cloud Pub/Sub / SNS (async messaging)
+        - Cloud Monitoring / CloudWatch (observability)
+      regions: Multi-region deployment (US, EU, APAC)
+
+    ai_model:
+      primary: Custom fine-tuned LLM (GPT-4-class or Claude-3-class)
+      fallback: GPT-4-turbo API
+      local_inference: Optional TinyLlama/Phi-3 for offline mode
+      context_window: 128k tokens minimum
+      response_streaming: Server-Sent Events (SSE) or WebSocket
+
+  # ============================================================================
+  # CORE FEATURES & USER FLOWS
+  # ============================================================================
+
+  features:
+    chat_interface:
+      streaming_responses:
+        enabled: true
+        protocol: Server-Sent Events (SSE) or WebSocket
+        fallback: Polling with 500ms interval
+        typing_indicator: true
+
+      message_types:
+        - text (markdown formatted)
+        - code_block (syntax highlighted, language detected)
+        - file_attachment (images, logs, config files)
+        - voice_note (transcribed to text)
+        - architecture_diagram (ASCII, Mermaid, PlantUML)
+
+      code_blocks:
+        syntax_highlighting: 50+ languages via Prism.js or highlight.js
+        line_numbers: optional
+        actions:
+          - copy_to_clipboard
+          - edit_inline
+          - save_to_project
+          - share_via (email, slack, etc.)
+          - run_in_sandbox (future feature)
+        themes: Dracula, Monokai, GitHub Light/Dark, Solarized
+
+      voice_input_output:
+        voice_to_text: Google Speech-to-Text / Apple Speech Framework
+        text_to_voice: Google TTS / AVSpeechSynthesizer
+        languages: 10+ major languages
+        wake_word: Optional "Hey CodeForge"
+
+      conversation_history:
+        storage: Local database + optional cloud sync
+        search: Full-text search with filters (date, language, project)
+        export: JSON, Markdown, PDF
+        retention: Unlimited (user controlled)
+        encryption: AES-256 at rest
+
+    project_workspace:
+      multi_file_support:
+        enabled: true
+        max_files_per_project: 100 (free), 1000 (pro)
+        max_file_size: 5MB per file
+        supported_extensions: 100+ programming languages
+
+      file_editor:
+        features:
+          - syntax_highlighting
+          - auto_completion (basic)
+          - bracket_matching
+          - line_wrapping
+          - search_and_replace
+          - undo_redo (50 steps)
+
+      local_storage:
+        database: SQLite (Room/Core Data)
+        max_total_size: 500MB (free), 5GB (pro)
+        compression: Gzip for text files
+
+      cloud_sync:
+        enabled: Optional (pro tier)
+        authentication: Google Sign-In / Apple Sign-In
+        sync_strategy: Last-write-wins with conflict detection
+        sync_interval: Real-time (WebSocket) + every 5 minutes
+        offline_queue: Changes queued and synced when online
+
+      export_options:
+        - zip_archive (download locally)
+        - github_repo (OAuth integration)
+        - gitlab_repo (OAuth integration)
+        - bitbucket_repo (OAuth integration)
+        - email_attachment
+        - share_link (temporary 7-day link)
+
+    offline_mode:
+      cached_ai_models:
+        enabled: Optional (user downloads 2GB model)
+        model: Phi-3-mini or TinyLlama
+        capabilities: Basic code completion, syntax fixes
+        limitations: No advanced reasoning, smaller context
+
+      preloaded_snippets:
+        count: 5000+ curated code patterns
+        categories:
+          - algorithms (sorting, searching, graphs)
+          - data_structures (trees, heaps, tries)
+          - design_patterns (singleton, factory, observer)
+          - web_frameworks (React, Vue, Angular, Express)
+          - mobile_frameworks (Flutter, React Native, SwiftUI)
+          - database_queries (SQL, MongoDB, Redis)
+          - devops_scripts (Docker, K8s, CI/CD)
+        search: Instant fuzzy search
+        customization: User can add own snippets
+
+      offline_sync:
+        strategy: Download critical data when online
+        selective_sync: User chooses which projects to keep offline
+
+    specialized_modes:
+      debug_mode:
+        input: Error message + stack trace + code context
+        analysis:
+          - error_type_detection
+          - root_cause_analysis
+          - fix_suggestions (ranked by confidence)
+          - related_documentation_links
+        output: Step-by-step fix guide + code patches
+
+      architecture_mode:
+        input: App description (text or voice)
+        output:
+          - system_architecture_diagram (C4 model)
+          - tech_stack_recommendations
+          - database_schema (ERD)
+          - api_design (endpoints + contracts)
+          - deployment_architecture
+          - cost_estimation
+        formats: ASCII art, Mermaid, PlantUML, image export
+
+      learn_mode:
+        input: Concept or technology to learn
+        output:
+          - eli5_explanation
+          - code_examples (beginner to advanced)
+          - interactive_exercises
+          - recommended_resources
+          - practice_projects
+        adaptive: Adjusts difficulty based on user level
+
+      security_scan_mode:
+        input: Code files or project
+        analysis:
+          - owasp_top_10_vulnerabilities
+          - dependency_vulnerabilities (via Snyk API)
+          - secrets_detection (API keys, passwords)
+          - code_quality_issues
+        output:
+          - vulnerability_report (severity ranked)
+          - fix_recommendations
+          - secure_code_alternatives
+        compliance: OWASP, CWE, CVE databases
+
+      performance_mode:
+        input: Code + performance metrics
+        analysis:
+          - time_complexity_analysis
+          - space_complexity_analysis
+          - bottleneck_detection
+          - optimization_suggestions
+        output: Refactored code + benchmark comparisons
+
+  # ============================================================================
+  # AUTHENTICATION & AUTHORIZATION
+  # ============================================================================
+
+  authentication:
+    required: true
+    methods:
+      - provider: Apple Sign-In
+        platform: iOS (mandatory), Android (optional)
+        scopes: [email, name]
+
+      - provider: Google Sign-In
+        platform: Android (mandatory), iOS (optional)
+        scopes: [email, profile]
+
+    no_email_password: true  # Simplify UX, reduce support burden
+
+    session_management:
+      access_token_lifetime: 15 minutes
+      refresh_token_lifetime: 30 days
+      token_storage: Keychain (iOS), EncryptedSharedPreferences (Android)
+      automatic_refresh: Silent refresh 2 minutes before expiry
+
+    authorization:
+      model: Role-Based Access Control (RBAC)
+      roles:
+        - free_user (default)
+        - pro_user (subscription active)
+        - admin (internal only)
+      permissions:
+        - read_own_data
+        - write_own_data
+        - delete_own_data
+        - export_data (GDPR right)
+
+  # ============================================================================
+  # PRIVACY & SECURITY
+  # ============================================================================
+
+  privacy:
+    philosophy: Privacy-first, user-controlled data
+
+    data_collection:
+      personal_data:
+        - email (from OAuth provider)
+        - display_name (optional)
+        - profile_picture (optional, cached locally)
+
+      usage_data:
+        - feature_usage_analytics (anonymous)
+        - crash_reports (via Sentry or Firebase Crashlytics)
+        - performance_metrics (app launch time, API latency)
+
+      code_data:
+        - user_code_snippets (stored locally by default)
+        - chat_conversations (local + optional cloud)
+        - project_files (local + optional cloud)
+
+    data_transmission:
+      user_consent_required: true (explicit opt-in for cloud sync)
+      encryption_in_transit: TLS 1.3 minimum
+      encryption_at_rest: AES-256 for sensitive data
+      code_anonymization: Strip PII before sending to AI model
+
+    data_retention:
+      active_users: Data retained indefinitely (user controlled)
+      inactive_users: Data deleted after 24 months of inactivity (with 30-day notice)
+      deleted_accounts: All data purged within 30 days (GDPR/CCPA compliance)
+
+    third_party_sharing:
+      ai_model_providers: Code sent only with user consent (per request or blanket)
+      analytics_providers: Anonymous usage data only (no PII)
+      crash_reporting: Stack traces (stripped of sensitive data)
+      no_selling_data: Explicit policy against selling user data
+
+    compliance:
+      regulations:
+        - GDPR (EU General Data Protection Regulation)
+        - CCPA (California Consumer Privacy Act)
+        - COPPA (if users under 13 allowed - recommend 13+ age gate)
+      user_rights:
+        - right_to_access (export all data)
+        - right_to_deletion (account + data purge)
+        - right_to_portability (JSON/ZIP export)
+        - right_to_opt_out (analytics, cloud sync)
+      privacy_policy: Publicly accessible, updated annually
+      terms_of_service: Clearly written, non-exploitative
+
+  security:
+    mobile_app:
+      code_obfuscation: ProGuard (Android), Swift optimization (iOS)
+      anti_tampering: Root/jailbreak detection (warning, not blocking)
+      secure_storage:
+        - Keychain (iOS)
+        - Android Keystore + EncryptedSharedPreferences
+      certificate_pinning: Pin backend API certificates
+      biometric_authentication: Optional Face ID / Touch ID for app unlock
+
+    backend_api:
+      authentication: OAuth 2.0 + JWT
+      rate_limiting: Per-user + per-IP limits
+      ddos_protection: Cloud Armor (GCP) or AWS Shield
+      input_validation: Strict schema validation on all endpoints
+      sql_injection_prevention: Parameterized queries, ORM usage
+      xss_prevention: Content Security Policy headers
+      csrf_protection: CSRF tokens for state-changing operations
+
+    penetration_testing:
+      frequency: Annual third-party security audit
+      scope: Mobile apps + backend API
+      compliance: OWASP Mobile Top 10, OWASP API Security Top 10
+
+    incident_response:
+      plan: Documented IR playbook
+      notification: Users notified within 72 hours of breach (GDPR requirement)
+      logging: Centralized audit logs (retained 1 year)
+
+  # ============================================================================
+  # DESIGN & ACCESSIBILITY
+  # ============================================================================
+
+  design_system:
+    ui_style: Clean, modern, developer-focused
+    inspiration: VS Code + Linear + Raycast
+
+    color_palette:
+      primary: "#0D94F6"  # CodeForge blue
+      secondary: "#6C47FF"  # Purple accent
+      success: "#10B981"
+      warning: "#F59E0B"
+      error: "#EF4444"
+
+    themes:
+      - name: Light
+        background: "#FFFFFF"
+        surface: "#F9FAFB"
+        text: "#111827"
+
+      - name: Dark (default)
+        background: "#0F172A"
+        surface: "#1E293B"
+        text: "#F1F5F9"
+
+      - name: High Contrast
+        background: "#000000"
+        surface: "#1A1A1A"
+        text: "#FFFFFF"
+
+    typography:
+      primary_font:
+        ios: SF Pro (system default)
+        android: Roboto (system default)
+      monospace_font:
+        preferred: JetBrains Mono
+        fallback: SF Mono (iOS), Roboto Mono (Android)
+      scale:
+        - xs: 12px
+        - sm: 14px
+        - base: 16px
+        - lg: 18px
+        - xl: 20px
+        - 2xl: 24px
+        - 3xl: 30px
+
+    spacing:
+      unit: 4px (8px recommended minimum for touch targets)
+      touch_targets: 44x44px minimum (iOS HIG + Material guidelines)
+
+    icons:
+      library: SF Symbols (iOS), Material Icons (Android)
+      custom_icons: Heroicons or Lucide for cross-platform consistency
+
+    animations:
+      duration:
+        - fast: 150ms (micro-interactions)
+        - normal: 300ms (standard transitions)
+        - slow: 500ms (page transitions)
+      easing: Ease-out for entrances, ease-in for exits
+      reduce_motion: Respect OS accessibility setting
+
+  accessibility:
+    standard: WCAG 2.1 Level AA compliance
+
+    features:
+      - screen_reader_support:
+          ios: VoiceOver optimized
+          android: TalkBack optimized
+          labels: All interactive elements labeled
+
+      - keyboard_navigation:
+          enabled: Full keyboard support (iOS with Magic Keyboard, Android)
+          focus_indicators: Visible focus states
+
+      - color_contrast:
+          minimum: 4.5:1 for normal text
+          large_text: 3:1 for 18px+ or 14px+ bold
+
+      - text_scaling:
+          support: Dynamic Type (iOS), Scalable Fonts (Android)
+          range: 100% - 200% without breaking layout
+
+      - high_contrast_mode:
+          enabled: Separate high contrast theme
+
+      - reduced_motion:
+          respect: Disable animations if OS setting enabled
+
+      - voice_control:
+          ios: Full Voice Control support
+          android: Voice Access support
+
+    testing:
+      tools:
+        - Accessibility Inspector (Xcode)
+        - Accessibility Scanner (Android Studio)
+        - Manual testing with screen readers
+      frequency: Every major release
+      audits: Annual third-party accessibility audit
+
+  localization:
+    default_language: English (US)
+
+    supported_languages:
+      launch:
+        - English (en-US)
+        - Spanish (es-ES, es-MX)
+        - French (fr-FR)
+        - German (de-DE)
+        - Japanese (ja-JP)
+        - Chinese Simplified (zh-CN)
+
+      post_launch:
+        - Portuguese (pt-BR)
+        - Korean (ko-KR)
+        - Russian (ru-RU)
+        - Hindi (hi-IN)
+
+    implementation:
+      ios: NSLocalizedString + .strings files
+      android: strings.xml per language
+      dynamic_content: Server-side translations via API
+      rtl_support: Planned for Arabic/Hebrew (post-launch)
+
+    cultural_considerations:
+      date_time_formats: Locale-specific (ISO 8601 for storage)
+      number_formats: Locale-specific (comma vs period decimals)
+      currency: User's local currency for subscription pricing
+
+  # ============================================================================
+  # MONETIZATION & BUSINESS MODEL
+  # ============================================================================
+
+  monetization:
+    model: Freemium with subscription
+
+    tiers:
+      free:
+        price: $0/month
+        features:
+          - 100 AI messages per day
+          - Basic code generation
+          - 5 projects (max)
+          - 500MB local storage
+          - Offline code snippets (5000+)
+          - Community support (Discord/Forum)
+        limitations:
+          - No cloud sync
+          - No voice mode
+          - Standard response speed
+          - Ads (non-intrusive banner in free tier - optional)
+
+      pro:
+        price: $9.99/month or $99/year (17% discount)
+        features:
+          - Unlimited AI messages
+          - Advanced AI agents (Security, Performance, Architecture)
+          - Unlimited projects
+          - 5GB cloud storage + sync
+          - Voice-to-code mode
+          - Priority response speed (2x faster)
+          - Export to GitHub/GitLab
+          - Priority email support
+          - Early access to new features
+        trial: 7-day free trial (no credit card required)
+
+      enterprise:
+        price: Custom (starts at $49/user/month, annual contract)
+        features:
+          - All Pro features
+          - Team collaboration (shared projects)
+          - SSO integration
+          - Custom AI model fine-tuning
+          - Dedicated support + SLA
+          - On-premise deployment option
+          - Usage analytics dashboard
+
+    payment_processing:
+      android: Google Play Billing
+      ios: Apple In-App Purchase (StoreKit 2)
+      web: Stripe (for PWA)
+
+    subscription_management:
+      auto_renewable: true
+      cancellation: Anytime (access until period end)
+      refunds: Apple/Google policy (typically 48h no-questions-asked)
+      grace_period: 3 days for payment issues
+
+    revenue_projections:
+      year_1:
+        downloads: 50,000
+        free_to_pro_conversion: 5% (2,500 pro users)
+        arr: $300,000 (2,500 × $9.99 × 12)
+      year_2:
+        downloads: 200,000
+        conversion: 8%
+        arr: $1,920,000
+      year_3:
+        downloads: 500,000
+        conversion: 10%
+        arr: $6,000,000
+
+  # ============================================================================
+  # PERFORMANCE & RELIABILITY
+  # ============================================================================
+
+  performance_requirements:
+    mobile_app:
+      cold_start_time: <2 seconds (50th percentile), <3.5s (95th)
+      hot_start_time: <1 second
+      ui_frame_rate: 60 FPS sustained (120 FPS on capable devices)
+      memory_usage: <150MB typical, <250MB peak
+      battery_impact: <3% per hour of active use
+
+    api_performance:
+      response_time:
+        p50: <200ms (non-streaming endpoints)
+        p95: <500ms
+        p99: <1000ms
+      streaming_latency: <100ms time-to-first-token
+      throughput: 1000 req/sec per region
+
+    offline_performance:
+      snippet_search: <50ms for 5000+ items
+      local_file_operations: <100ms for files <1MB
+
+  reliability:
+    uptime_sla: 99.9% (pro tier), 99.5% (free tier)
+
+    error_budgets:
+      mobile_crash_rate: <0.1% (1 crash per 1000 sessions)
+      api_error_rate: <0.5% (5xx errors)
+
+    monitoring:
+      mobile_apm: Firebase Crashlytics + Performance Monitoring
+      backend_apm: Datadog or New Relic
+      real_user_monitoring: Track actual user latency
+      synthetic_monitoring: Uptime checks every 1 minute
+
+    alerting:
+      critical: PagerDuty integration for on-call engineers
+      thresholds:
+        - API error rate >1% for 5 minutes
+        - API latency p95 >1s for 5 minutes
+        - Mobile crash rate >0.5%
+
+    disaster_recovery:
+      backups:
+        database: Continuous replication + daily snapshots (30-day retention)
+        user_files: S3 versioning + cross-region replication
+      rpo: 5 minutes (Recovery Point Objective)
+      rto: 1 hour (Recovery Time Objective)
+
+  # ============================================================================
+  # TESTING STRATEGY
+  # ============================================================================
+
+  testing:
+    mobile_app:
+      unit_tests:
+        coverage_target: 80%
+        frameworks:
+          android: JUnit 5 + Kotest + MockK
+          ios: XCTest + Quick/Nimble
+        scope: ViewModels, use cases, repositories
+
+      integration_tests:
+        scope: Database operations, API calls
+        mocking: Mock server (WireMock or MockWebServer)
+
+      ui_tests:
+        framework:
+          android: Espresso + Compose Testing
+          ios: XCUITest + ViewInspector
+        coverage: Critical user flows (login, send message, create project)
+        screenshot_tests: Snapshot testing for UI regressions
+
+      manual_qa:
+        frequency: Every sprint (2-week cycle)
+        test_cases: 100+ scenarios
+        devices: 10+ physical devices (varied manufacturers, OS versions)
+
+    backend_api:
+      unit_tests:
+        coverage_target: 90%
+        framework: Language-specific (Jest for Node, pytest for Python)
+
+      integration_tests:
+        scope: API endpoints, database interactions
+        test_data: Realistic fixtures
+
+      load_tests:
+        tool: k6 or Locust
+        scenarios:
+          - baseline: 100 concurrent users
+          - stress: 1000 concurrent users
+          - spike: 5000 users for 1 minute
+        metrics: Response time, error rate, throughput
+
+      security_tests:
+        static_analysis: SonarQube or Semgrep
+        dependency_scanning: Snyk or Dependabot
+        penetration_testing: Annual third-party audit
+
+    automated_testing:
+      ci_pipeline: GitHub Actions or GitLab CI
+      triggers: Every commit to main + pull requests
+      gates:
+        - All unit tests pass
+        - Integration tests pass
+        - Code coverage ≥80%
+        - No critical security vulnerabilities
+        - Linting passes (SwiftLint, ktlint)
+
+  # ============================================================================
+  # CI/CD & DEPLOYMENT
+  # ============================================================================
+
+  ci_cd:
+    version_control:
+      platform: GitHub or GitLab
+      branching_strategy: Trunk-based development
+      commit_convention: Conventional Commits (feat, fix, docs, etc.)
+
+    continuous_integration:
+      platform: GitHub Actions, GitLab CI, or Bitrise
+
+      android_pipeline:
+        steps:
+          - checkout_code
+          - setup_jdk_17
+          - gradle_test (unit + integration tests)
+          - gradle_lint
+          - gradle_assemble_release
+          - sign_apk_aab (Google Play signing)
+          - upload_to_play_console (internal testing track)
+
+      ios_pipeline:
+        steps:
+          - checkout_code
+          - setup_xcode_15
+          - pod_install (if using CocoaPods)
+          - xcodebuild_test
+          - swiftlint
+          - xcodebuild_archive
+          - export_ipa
+          - upload_to_testflight (TestFlight beta)
+
+      triggers:
+        - push_to_main
+        - pull_request (run tests only, no deployment)
+        - tagged_release (deploy to production)
+
+    continuous_deployment:
+      environments:
+        - development (internal builds, daily)
+        - staging (QA testing, weekly)
+        - production (public release, bi-weekly or monthly)
+
+      android_distribution:
+        internal: Internal testing track (auto-deploy on main)
+        beta: Closed beta track (manual promotion)
+        production: Production track (manual promotion after approval)
+        rollout_strategy: Staged rollout (10% → 25% → 50% → 100% over 7 days)
+
+      ios_distribution:
+        internal: TestFlight internal testing (auto-deploy)
+        beta: TestFlight external testing (manual)
+        production: App Store (manual promotion after Apple review)
+        rollout_strategy: Phased release (Apple default 7-day rollout)
+
+    release_process:
+      versioning: Semantic versioning (MAJOR.MINOR.PATCH)
+      changelog: Auto-generated from conventional commits
+      release_notes: Manually curated for user-facing changes
+
+      pre_release_checklist:
+        - All tests passing
+        - Security scan clean
+        - Performance benchmarks met
+        - Localization complete
+        - Privacy policy updated (if needed)
+        - App Store/Play Store assets ready
+
+      rollback_plan: Instant rollback to previous version if critical bug detected
+
+  # ============================================================================
+  # LAUNCH PLAN & MARKETING
+  # ============================================================================
+
+  launch_plan:
+    phases:
+      alpha:
+        date: October 2025
+        audience: Internal team (10 users)
+        goal: Core functionality validation
+
+      closed_beta:
+        date: November 2025
+        audience: 100 invited developers
+        channel: ProductHunt Beta, Twitter/X, dev communities
+        goal: Feature feedback, bug identification
+
+      open_beta:
+        date: January 2026
+        audience: Public (unlimited, opt-in via landing page)
+        goal: Scale testing, gather reviews
+
+      public_launch:
+        date: March 2026
+        announcement: ProductHunt launch + press release
+
+    app_store_requirements:
+      google_play:
+        production_track: Closed testing with 20+ testers for 14 days (Google policy)
+        content_rating: IARC questionnaire (likely PEGI 3 / ESRB E)
+        privacy_policy_url: Required (must be publicly accessible)
+        data_safety_form: Complete accurately (data collected, shared, encrypted)
+
+      apple_app_store:
+        app_review: 2-5 business days (plan for worst case)
+        privacy_nutrition_labels: Required (accurate data usage disclosure)
+        app_preview_video: Recommended (30 seconds, feature highlights)
+        screenshots: 6.5" iPhone, 6.7" iPhone, 12.9" iPad Pro (required sizes)
+
+    promotional_assets:
+      app_icon:
+        design: CodeForge logo (stylized <> symbol)
+        variants: iOS rounded square, Android adaptive icon
+
+      screenshots:
+        count: 5-8 per device size
+        content:
+          - Hero shot (chat interface with code)
+          - Architecture diagram generation
+          - Project workspace
+          - Voice-to-code demo
+          - Security scan results
+        captions: Highlight key benefits
+
+      promo_video:
+        length: 30-60 seconds
+        content:
+          - Problem (debugging at 2 AM, stuck on architecture)
+          - Solution (CodeForge AI in action)
+          - Benefits (faster coding, learning, confidence)
+          - Call-to-action (download now)
+        style: Live-action + screen recordings, fast-paced
+
+      landing_page:
+        url: https://codeforgeai.app
+        sections:
+          - hero (tagline + CTA)
+          - features (visual feature grid)
+          - demo_video
+          - testimonials (beta testers)
+          - pricing
+          - faq
+          - download_links (App Store, Play Store badges)
+        tech: Next.js + Tailwind CSS (fast, SEO-friendly)
+
+  marketing_strategy:
+    channels:
+      organic:
+        - seo: Blog posts on coding tips, AI-assisted development
+        - content_marketing: YouTube tutorials, dev.to articles
+        - social_media: Twitter/X, LinkedIn (dev community)
+        - community: Reddit (r/programming, r/webdev), Discord servers
+        - product_hunt: Launch day push (aim for #1 product of the day)
+
+      paid:
+        - google_ads: Search ads for "mobile coding assistant", "AI code generator"
+        - social_ads: Twitter/X promoted tweets, LinkedIn sponsored content
+        - influencer_partnerships: Tech YouTubers (reviews, sponsorships)
+
+      partnerships:
+        - bootcamps: Offer free pro tier to coding bootcamp students
+        - universities: Academic licenses for CS programs
+        - dev_communities: Sponsor hackathons, meetups
+
+    launch_week_campaign:
+      - day_1: ProductHunt launch + press release
+      - day_2: Twitter/X thread (founder story)
+      - day_3: Blog post (behind-the-scenes development)
+      - day_4: YouTube demo video (feature walkthrough)
+      - day_5: AMA on Reddit (r/coding)
+      - day_6: Launch party (virtual, invite beta users)
+      - day_7: Metrics recap (downloads, reviews, feedback)
+
+  # ============================================================================
+  # SUCCESS METRICS & ANALYTICS
+  # ============================================================================
+
+  success_metrics:
+    acquisition:
+      - downloads:
+          target_3_months: 50,000
+          target_6_months: 150,000
+          target_12_months: 500,000
+      - app_store_rating:
+          target: 4.7+ stars
+          review_count: 1000+ reviews
+      - organic_vs_paid: 70% organic, 30% paid
+
+    engagement:
+      - dau_mau_ratio: 30%+ (strong engagement)
+      - avg_session_length: 10+ minutes
+      - messages_per_user_per_day: 20+
+      - retention:
+          day_1: 50%
+          day_7: 30%
+          day_30: 20%
+
+    monetization:
+      - free_to_pro_conversion: 5% (month 1), 10% (month 6), 15% (month 12)
+      - churn_rate: <5% monthly
+      - lifetime_value (LTV): $200+
+      - customer_acquisition_cost (CAC): <$30
+      - ltv_cac_ratio: 6:1 or better
+
+    satisfaction:
+      - nps_score: 50+ (promoters - detractors)
+      - csat_score: 4.5+ / 5
+      - support_tickets: <2% of active users
+
+  analytics:
+    tools:
+      mobile: Firebase Analytics + Amplitude
+      backend: Mixpanel or Segment
+      crash_reporting: Firebase Crashlytics (Android), Sentry (iOS)
+
+    events_to_track:
+      user_journey:
+        - app_opened
+        - onboarding_completed
+        - first_message_sent
+        - first_code_generated
+        - first_project_created
+        - subscription_started
+
+      feature_usage:
+        - chat_message_sent (with language tag)
+        - code_copied
+        - code_edited
+        - voice_input_used
+        - architecture_diagram_generated
+        - security_scan_run
+        - project_exported
+
+      business_metrics:
+        - subscription_started
+        - subscription_renewed
+        - subscription_cancelled (with reason)
+        - referral_sent
+
+    privacy_compliance:
+      consent: Explicit opt-in for analytics (GDPR requirement)
+      anonymization: User IDs hashed, no PII collected
+      opt_out: Easy opt-out in app settings
+
+  # ============================================================================
+  # SUPPORT & COMMUNITY
+  # ============================================================================
+
+  customer_support:
+    channels:
+      free_tier:
+        - in_app_faq (searchable)
+        - community_forum (Discourse or Reddit)
+        - discord_server (community-driven help)
+        - email_support (48-hour response time)
+
+      pro_tier:
+        - priority_email (12-hour response time)
+        - in_app_chat (business hours)
+
+      enterprise:
+        - dedicated_slack_channel
+        - phone_support (business hours)
+        - sla_guarantees (4-hour response for critical issues)
+
+    knowledge_base:
+      platform: Notion, GitBook, or custom docs site
+      content:
+        - getting_started_guide
+        - feature_tutorials (with videos)
+        - troubleshooting (common issues)
+        - api_documentation (for advanced users)
+        - faq (billing, privacy, technical)
+      search: Algolia-powered instant search
+
+  community:
+    discord_server:
+      channels:
+        - general (casual chat)
+        - help (peer support)
+        - feedback (feature requests)
+        - showcase (share projects)
+        - announcements (official updates)
+      moderation: 3+ volunteer moderators
+
+    user_feedback:
+      roadmap: Public roadmap (https://roadmap.codeforgeai.app)
+      voting: Users vote on feature requests
+      transparency: Monthly update on progress
+
+    contributor_program:
+      open_source_components: Consider open-sourcing syntax highlighter, snippet library
+      snippet_contributions: Users can submit snippets (curated by team)
+      rewards: Pro tier discounts for valuable contributions
+
+  # ============================================================================
+  # RISKS & MITIGATION
+  # ============================================================================
+
+  risks:
+    technical:
+      - risk: AI model costs spiral out of control
+        mitigation: Implement aggressive caching, rate limiting, optimize prompts
+
+      - risk: App Store/Play Store rejection
+        mitigation: Thorough review guidelines study, pre-submission checklist
+
+      - risk: Scalability issues under load
+        mitigation: Load testing, auto-scaling infrastructure, CDN caching
+
+      - risk: Data breach or security incident
+        mitigation: Penetration testing, bug bounty program, encryption at rest/transit
+
+    business:
+      - risk: Low free-to-pro conversion
+        mitigation: A/B test pricing, feature gating, improved onboarding
+
+      - risk: High churn rate
+        mitigation: User research, feature iteration, loyalty programs
+
+      - risk: Competitor launches similar app first
+        mitigation: Speed to market, differentiation (voice mode, offline), quality
+
+    legal:
+      - risk: GDPR/CCPA non-compliance fine
+        mitigation: Legal review, privacy-by-design, compliance audits
+
+      - risk: Copyright infringement (AI generates copyrighted code)
+        mitigation: Disclaimer, user responsibility clause, model fine-tuning
+
+  # ============================================================================
+  # TEAM & RESOURCES
+  # ============================================================================
+
+  team_requirements:
+    minimum_viable_team:
+      - product_manager: 1 (full-time)
+      - mobile_engineers:
+          android: 1-2 (Kotlin/Jetpack)
+          ios: 1-2 (Swift/SwiftUI)
+      - backend_engineers: 1-2 (API, infrastructure)
+      - ml_engineer: 1 (AI model integration, fine-tuning)
+      - designer: 1 (UI/UX, part-time OK)
+      - qa_engineer: 1 (manual + automation)
+      - devops_engineer: 0.5 (can be shared role)
+
+    extended_team (post-launch):
+      - marketing_manager: 1
+      - customer_success: 1-2
+      - content_creator: 1 (blog, videos)
+      - community_manager: 1
+
+  budget_estimate:
+    pre_launch (6 months):
+      - team_salaries: $300,000 (5-6 people, avg $50k for 6 months)
+      - cloud_infrastructure: $5,000 (dev + staging)
+      - ai_api_costs: $10,000 (testing, beta)
+      - design_tools: $2,000 (Figma, assets)
+      - legal_compliance: $10,000 (privacy policy, ToS review)
+      - app_store_fees: $200 ($99 Apple + $25 Google)
+      - total: ~$330,000
+
+    year_1_operating:
+      - team_salaries: $600,000
+      - cloud_infrastructure: $50,000
+      - ai_api_costs: $100,000 (50k users, 5M requests/month)
+      - marketing: $100,000
+      - support_tools: $10,000 (Zendesk, Intercom)
+      - misc: $40,000
+      - total: ~$900,000
+
+  # ============================================================================
+  # FUTURE ROADMAP (POST-LAUNCH)
+  # ============================================================================
+
+  future_features:
+    q2_2026:
+      - pair_programming_mode: Real-time collaboration with AI
+      - code_review_automation: PR review suggestions
+      - custom_ai_personalities: Choose mentor style (strict, encouraging, etc.)
+
+    q3_2026:
+      - ide_extensions: VS Code, IntelliJ, Xcode extensions (sync with mobile)
+      - web_app: Full-featured web version (Next.js)
+      - team_workspaces: Shared projects for pro/enterprise
+
+    q4_2026:
+      - local_model_execution: Fully offline AI (via CoreML/NNAPI)
+      - plugin_system: Third-party extensions
+      - advanced_analytics: Code complexity metrics, technical debt analysis
+
+    2027:
+      - ai_code_execution: Sandbox for running generated code
+      - multi_modal_input: Draw diagrams, sketch UI (vision model integration)
+      - ar_mode: AR code visualization (iOS/Android AR frameworks)
+
+  # ============================================================================
+  # APPENDIX
+  # ============================================================================
+
+  appendix:
+    glossary:
+      EA: Expert Advisor (trading bot terminology - not relevant to this app)
+      LLM: Large Language Model (AI backend)
+      MVVM: Model-View-ViewModel (architecture pattern)
+      OAuth: Open Authorization (authentication protocol)
+      WCAG: Web Content Accessibility Guidelines
+
+    references:
+      - Apple Human Interface Guidelines: https://developer.apple.com/design/human-interface-guidelines/
+      - Material Design 3: https://m3.material.io/
+      - OWASP Mobile Top 10: https://owasp.org/www-project-mobile-top-10/
+      - GDPR Compliance: https://gdpr.eu/
+
+    change_log:
+      - version: 1.0.0
+        date: 2025-11-20
+        changes: Initial specification
+
+      - version: 2.0.0
+        date: 2025-11-28
+        changes:
+          - Added comprehensive technical architecture
+          - Expanded security and privacy sections
+          - Added CI/CD pipeline details
+          - Added testing strategy
+          - Added performance requirements
+          - Added localization/accessibility
+          - Added risk mitigation
+          - Added team/budget estimates
+          - Added future roadmap
+
+---
+END OF SPECIFICATION
