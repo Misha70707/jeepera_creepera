@@ -1,0 +1,21 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Nexus
+GenericName=Autonomous AI Agent
+Comment=The Autonomous Coder & Entrepreneur - AI agent for coding, learning, and business
+Exec=/home/user/tweny_fo_seven_tree_sixty_five/nexus_launcher.sh
+Icon=/home/user/tweny_fo_seven_tree_sixty_five/nexus_icon.png
+Terminal=true
+Categories=Development;Utility;AI;
+Keywords=ai;automation;coding;development;agent;autonomous;
+StartupNotify=true
+Actions=Demo;Stats;
+
+[Desktop Action Demo]
+Name=Run Demo
+Exec=/home/user/tweny_fo_seven_tree_sixty_five/nexus_launcher.sh --demo
+
+[Desktop Action Stats]
+Name=Show Stats
+Exec=/home/user/tweny_fo_seven_tree_sixty_five/nexus_launcher.sh /stats

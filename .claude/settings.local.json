@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git pull:*)",
+      "Bash(pip install:*)",
+      "Bash(ollama list:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

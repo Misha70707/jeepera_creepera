@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#0a0e27">
+
+    <title>Nexus - The Autonomous Coder</title>
+
+    <link rel="manifest" href="/manifest.json">
+    <link rel="icon" type="image/png" href="/static/icon-192.png">
+    <link rel="apple-touch-icon" href="/static/icon-192.png">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 100%);
+            color: #ffffff;
+            height: 100vh;
+            overflow: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .app-container {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+
+        /* Header */
+        .header {
+            background: rgba(26, 31, 58, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 15px 20px;
+            border-bottom: 1px solid rgba(68, 119, 255, 0.2);
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, #4477ff 0%, #6699ff 100%);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .logo-text {
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .status {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+            color: #4ade80;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background: #4ade80;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        /* Chat Messages */
+        .messages-container {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            scroll-behavior: smooth;
+        }
+
+        .message {
+            margin-bottom: 16px;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .message-user {
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .message-assistant {
+            display: flex;
+            justify-content: flex-start;
+        }
+
+        .message-bubble {
+            max-width: 80%;
+            padding: 12px 16px;
+            border-radius: 18px;
+            line-height: 1.5;
+            word-wrap: break-word;
+        }
+
+        .message-user .message-bubble {
+            background: linear-gradient(135deg, #4477ff 0%, #6699ff 100%);
+            color: white;
+            border-bottom-right-radius: 4px;
+        }
+
+        .message-assistant .message-bubble {
+            background: rgba(255, 255, 255, 0.1);
+            border-bottom-left-radius: 4px;
+            backdrop-filter: blur(10px);
+        }
+
+        .message-time {
+            font-size: 11px;
+            opacity: 0.6;
+            margin-top: 4px;
+            text-align: right;
+        }
+
+        /* Typing indicator */
+        .typing-indicator {
+            display: none;
+            padding: 12px 16px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 18px;
+            width: fit-content;
+            margin-bottom: 16px;
+        }
+
+        .typing-indicator.active {
+            display: block;
+        }
+
+        .typing-dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background: #6699ff;
+            border-radius: 50%;
+            margin: 0 2px;
+            animation: typing 1.4s infinite;
+        }
+
+        .typing-dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .typing-dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes typing {
+            0%, 60%, 100% {
+                transform: translateY(0);
+                opacity: 0.5;
+            }
+            30% {
+                transform: translateY(-10px);
+                opacity: 1;
+            }
+        }
+
+        /* Input Area */
+        .input-container {
+            background: rgba(26, 31, 58, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 15px 20px;
+            border-top: 1px solid rgba(68, 119, 255, 0.2);
+        }
+
+        .input-wrapper {
+            display: flex;
+            gap: 10px;
+            align-items: flex-end;
+        }
+
+        .input-field {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            padding: 12px 16px;
+            color: white;
+            font-size: 16px;
+            resize: none;
+            max-height: 120px;
+            overflow-y: auto;
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-color: #4477ff;
+            box-shadow: 0 0 0 3px rgba(68, 119, 255, 0.1);
+        }
+
+        .input-field::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .send-button {
+            width: 44px;
+            height: 44px;
+            background: linear-gradient(135deg, #4477ff 0%, #6699ff 100%);
+            border: none;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            flex-shrink: 0;
+        }
+
+        .send-button:active {
+            transform: scale(0.95);
+        }
+
+        .send-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .send-button svg {
+            width: 20px;
+            height: 20px;
+            fill: white;
+        }
+
+        /* Quick Actions */
+        .quick-actions {
+            display: flex;
+            gap: 8px;
+            padding: 10px 20px;
+            overflow-x: auto;
+            background: rgba(26, 31, 58, 0.5);
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .quick-action {
+            padding: 8px 16px;
+            background: rgba(68, 119, 255, 0.2);
+            border: 1px solid rgba(68, 119, 255, 0.3);
+            border-radius: 16px;
+            font-size: 14px;
+            white-space: nowrap;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .quick-action:active {
+            background: rgba(68, 119, 255, 0.4);
+        }
+
+        /* Welcome Screen */
+        .welcome-screen {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 40px 20px;
+            opacity: 1;
+            transition: opacity 0.3s;
+        }
+
+        .welcome-screen.hidden {
+            display: none;
+        }
+
+        .welcome-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #4477ff 0%, #6699ff 100%);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            margin-bottom: 20px;
+        }
+
+        .welcome-title {
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .welcome-subtitle {
+            font-size: 16px;
+            opacity: 0.7;
+            margin-bottom: 30px;
+        }
+
+        .example-prompts {
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .example-prompt {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 12px 16px;
+            border-radius: 12px;
+            margin-bottom: 10px;
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .example-prompt:active {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .example-prompt-title {
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+
+        .example-prompt-desc {
+            font-size: 14px;
+            opacity: 0.7;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <div class="header">
+            <div class="header-content">
+                <div class="logo">
+                    <div class="logo-icon">N</div>
+                    <div class="logo-text">Nexus</div>
+                </div>
+                <div class="status">
+                    <div class="status-dot"></div>
+                    <span id="status-text">Online</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="quick-actions">
+            <div class="quick-action" onclick="quickAction('Generate code for a todo app')">💻 Generate Code</div>
+            <div class="quick-action" onclick="quickAction('Analyze the Chrome extension market')">📊 Market Research</div>
+            <div class="quick-action" onclick="quickAction('Create a marketing plan')">📈 Marketing Plan</div>
+            <div class="quick-action" onclick="quickAction('Help me debug this error')">🐛 Debug Help</div>
+        </div>
+
+        <!-- Messages -->
+        <div class="messages-container" id="messages">
+            <!-- Welcome Screen -->
+            <div class="welcome-screen" id="welcome">
+                <div class="welcome-icon">🤖</div>
+                <div class="welcome-title">Welcome to Nexus</div>
+                <div class="welcome-subtitle">Your Autonomous AI Coder & Entrepreneur</div>
+
+                <div class="example-prompts">
+                    <div class="example-prompt" onclick="quickAction('Generate a Python function to validate email addresses')">
+                        <div class="example-prompt-title">✍️ Code Generation</div>
+                        <div class="example-prompt-desc">Generate production-ready code</div>
+                    </div>
+                    <div class="example-prompt" onclick="quickAction('Research the latest React best practices')">
+                        <div class="example-prompt-title">📚 Learning</div>
+                        <div class="example-prompt-desc">Learn new technologies</div>
+                    </div>
+                    <div class="example-prompt" onclick="quickAction('Analyze opportunities in the productivity tools market')">
+                        <div class="example-prompt-title">💡 Market Analysis</div>
+                        <div class="example-prompt-desc">Find product opportunities</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Typing Indicator -->
+            <div class="typing-indicator" id="typing">
+                <span class="typing-dot"></span>
+                <span class="typing-dot"></span>
+                <span class="typing-dot"></span>
+            </div>
+        </div>
+
+        <!-- Input -->
+        <div class="input-container">
+            <div class="input-wrapper">
+                <textarea
+                    class="input-field"
+                    id="input"
+                    placeholder="Ask Nexus anything..."
+                    rows="1"
+                    onkeydown="handleKeyDown(event)"
+                ></textarea>
+                <button class="send-button" id="send" onclick="sendMessage()">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const messagesContainer = document.getElementById('messages');
+        const inputField = document.getElementById('input');
+        const sendButton = document.getElementById('send');
+        const typingIndicator = document.getElementById('typing');
+        const welcomeScreen = document.getElementById('welcome');
+
+        // Auto-resize textarea
+        inputField.addEventListener('input', function() {
+            this.style.height = 'auto';
+            this.style.height = Math.min(this.scrollHeight, 120) + 'px';
+        });
+
+        function handleKeyDown(event) {
+            if (event.key === 'Enter' && !event.shiftKey) {
+                event.preventDefault();
+                sendMessage();
+            }
+        }
+
+        function quickAction(message) {
+            inputField.value = message;
+            sendMessage();
+        }
+
+        function addMessage(content, isUser = false) {
+            // Hide welcome screen on first message
+            welcomeScreen.classList.add('hidden');
+
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message message-${isUser ? 'user' : 'assistant'}`;
+
+            const now = new Date();
+            const time = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+
+            messageDiv.innerHTML = `
+                <div class="message-bubble">
+                    ${content}
+                    <div class="message-time">${time}</div>
+                </div>
+            `;
+
+            // Insert before typing indicator
+            messagesContainer.insertBefore(messageDiv, typingIndicator);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+
+        async function sendMessage() {
+            const message = inputField.value.trim();
+            if (!message) return;
+
+            // Add user message
+            addMessage(message, true);
+            inputField.value = '';
+            inputField.style.height = 'auto';
+
+            // Show typing indicator
+            typingIndicator.classList.add('active');
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+
+            // Disable send button
+            sendButton.disabled = true;
+
+            try {
+                const response = await fetch('/api/chat', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ message })
+                });
+
+                const data = await response.json();
+
+                // Hide typing indicator
+                typingIndicator.classList.remove('active');
+
+                if (data.success) {
+                    addMessage(data.response);
+                } else {
+                    addMessage('Sorry, I encountered an error: ' + data.error);
+                }
+
+            } catch (error) {
+                typingIndicator.classList.remove('active');
+                addMessage('Sorry, I couldn\'t connect to the server. Please check your connection.');
+            } finally {
+                sendButton.disabled = false;
+                inputField.focus();
+            }
+        }
+
+        // Check server status
+        async function checkStatus() {
+            try {
+                const response = await fetch('/api/health');
+                const data = await response.json();
+                document.getElementById('status-text').textContent = 'Online';
+            } catch (error) {
+                document.getElementById('status-text').textContent = 'Offline';
+            }
+        }
+
+        // Check status every 30 seconds
+        setInterval(checkStatus, 30000);
+        checkStatus();
+
+        // Register service worker for PWA
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/service-worker.js')
+                .then(registration => console.log('Service Worker registered'))
+                .catch(error => console.log('Service Worker registration failed:', error));
+        }
+
+        // Focus input on load
+        window.addEventListener('load', () => {
+            inputField.focus();
+        });
+    </script>
+</body>
+</html>
