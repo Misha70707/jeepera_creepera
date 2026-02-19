@@ -14,3 +14,28 @@ test_gen
 test_gen.caches
 TEST-*.xml
 junit*.properties
+
+# Security - Secrets & Keys
+.env
+.env.*
+*.pem
+*.key
+*.cert
+id_rsa
+id_rsa.pub
+secrets.json
+
+# Security - Virtual Environments (may contain secrets/packages)
+venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+
+# Security - Logs (may contain sensitive data)
+*.log
+/MQL5/Logs/
+
+# Security - IDE Configs (may contain project secrets)
+.vscode/
+.idea/
