@@ -50,7 +50,7 @@ tweny_fo_seven_trees_ixty_five/
 
 **Current Development Branch:**
 ```
-claude/claude-md-mhy3268tuaj600yz-013AKvQszRVaxYTr5bqk47FN
+claude/<descriptive-name>-<session-id>
 ```
 
 **Branch Naming Pattern:**
@@ -63,7 +63,7 @@ claude/claude-md-mhy3268tuaj600yz-013AKvQszRVaxYTr5bqk47FN
 #### Pushing Changes
 ```bash
 # Always use -u flag for first push to set upstream
-git push -u origin claude/claude-md-mhy3268tuaj600yz-013AKvQszRVaxYTr5bqk47FN
+git push -u origin claude/<descriptive-name>-<session-id>
 
 # CRITICAL: Branch must follow naming convention or push will fail with 403
 ```
@@ -75,10 +75,10 @@ git push -u origin claude/claude-md-mhy3268tuaj600yz-013AKvQszRVaxYTr5bqk47FN
 #### Fetching/Pulling
 ```bash
 # Fetch specific branch
-git fetch origin claude/claude-md-mhy3268tuaj600yz-013AKvQszRVaxYTr5bqk47FN
+git fetch origin claude/<descriptive-name>-<session-id>
 
 # Pull specific branch
-git pull origin claude/claude-md-mhy3268tuaj600yz-013AKvQszRVaxYTr5bqk47FN
+git pull origin claude/<descriptive-name>-<session-id>
 ```
 
 ### Commit Guidelines
@@ -114,7 +114,7 @@ EOF
 
 1. **Ensure you're on the correct branch:**
    ```bash
-   git checkout claude/claude-md-mhy3268tuaj600yz-013AKvQszRVaxYTr5bqk47FN
+   git checkout claude/<descriptive-name>-<session-id>
    ```
 
 2. **Make changes and stage:**
@@ -132,7 +132,7 @@ EOF
 
 4. **Push to remote:**
    ```bash
-   git push -u origin claude/claude-md-mhy3268tuaj600yz-013AKvQszRVaxYTr5bqk47FN
+   git push -u origin claude/<descriptive-name>-<session-id>
    ```
 
 ## AI Assistant Conventions
@@ -1073,7 +1073,7 @@ The `gh` CLI tool is **not available** in this environment. For GitHub operation
 - **Platform:** Linux 4.4.0
 - **Working Directory:** `/home/user/tweny_fo_seven_trees_ixty_five`
 - **Git Status:** Clean working directory
-- **Current Branch:** `claude/claude-md-mhy3268tuaj600yz-013AKvQszRVaxYTr5bqk47FN`
+- **Current Branch:** `(Dynamic - check git status)`
 
 ## Quick Reference
 
@@ -1130,7 +1130,7 @@ If you're developing this repository, consider documenting:
 
 **Last Updated:** 2025-11-14
 **Document Version:** 2.0.0
-**Branch:** claude/claude-md-mhy3268tuaj600yz-013AKvQszRVaxYTr5bqk47FN
+**Branch:** (varies)
 
 ## Changelog
 
