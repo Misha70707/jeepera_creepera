@@ -14,3 +14,8 @@ test_gen
 test_gen.caches
 TEST-*.xml
 junit*.properties
+
+# MetaTrader 5
+*.ex5
+*.set
+*.log
