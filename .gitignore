@@ -1,16 +1,35 @@
+# --- MPS / Java (Existing) ---
 workspace.xml
 junitvmwatcher*.properties
 build.properties
-
-# generated java classes and java source files
-#   manually add any custom artifacts that can't be generated from the models
-#   http://confluence.jetbrains.com/display/MPSD25/HowTo+--+MPS+and+Git
 classes_gen
 source_gen
 source_gen.caches
-
-# generated test code and test results
 test_gen
 test_gen.caches
 TEST-*.xml
 junit*.properties
+
+# --- Python & ML ---
+__pycache__/
+*.py[cod]
+venv/
+.env
+.env.*
+!.env.example
+
+# --- MQL5 & Trading ---
+*.ex5
+*.log
+*.set
+MQL5/Files/*.bin
+
+# --- Security & Secrets ---
+*.pem
+*.key
+*.p12
+secrets.json
+credentials.json
+.idea/
+.vscode/
+.DS_Store
