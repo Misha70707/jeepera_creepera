@@ -14,3 +14,28 @@ test_gen
 test_gen.caches
 TEST-*.xml
 junit*.properties
+
+# --- Security Exclusions ---
+# Secrets & Keys
+.env
+.env.*
+!.env.example
+*.key
+*.pem
+*.pfx
+*.p12
+
+# Python Environment (Avoids leaking paths/deps)
+venv/
+.venv/
+__pycache__/
+*.py[cod]
+.ipynb_checkpoints/
+
+# MetaTrader 5 Sensitive Files
+*.ex5
+*.set
+*.log
+Tester/
+MQL5/Files/
+Files/
