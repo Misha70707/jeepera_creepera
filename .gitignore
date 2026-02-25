@@ -14,3 +14,51 @@ test_gen
 test_gen.caches
 TEST-*.xml
 junit*.properties
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# MQL5
+*.ex5
+*.set
+MQL5/Logs/
+# Data files directory - usually we want to ignore contents but keep the folder
+MQL5/Files/*
+!MQL5/Files/.gitkeep
+
+# General / Security
+.idea/
+.vscode/
+*.log
+.DS_Store
+secrets.json
+*.pem
+*.key
+id_rsa
+id_rsa.pub
