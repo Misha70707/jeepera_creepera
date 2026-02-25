@@ -14,3 +14,24 @@ test_gen
 test_gen.caches
 TEST-*.xml
 junit*.properties
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.venv
+venv/
+ENV/
+env/
+.env
+
+# MQL5
+*.ex5
+*.set
+*.log
+
+# General
+.DS_Store
+.idea/
+.vscode/
+*.swp
