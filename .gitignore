@@ -14,3 +14,42 @@ test_gen
 test_gen.caches
 TEST-*.xml
 junit*.properties
+
+# Security
+.env
+.env.*
+*.key
+*.pem
+*.pfx
+*.p12
+*.asc
+*.gpg
+id_rsa
+id_dsa
+*.sqlite
+*.db
+
+# Logs
+*.log
+
+# Python
+__pycache__/
+*.pyc
+venv/
+.venv/
+.python-version
+
+# IDE
+.idea/
+.vscode/
+*.iml
+*.ipr
+*.iws
+
+# System
+.DS_Store
+Thumbs.db
+
+# MT5
+*.ex5
+*.set
