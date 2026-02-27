@@ -14,3 +14,46 @@ test_gen
 test_gen.caches
 TEST-*.xml
 junit*.properties
+
+# --- Security & Secrets (CRITICAL) ---
+.env
+.env.*
+*.key
+*.pem
+*.p12
+*.pfx
+id_rsa
+id_rsa.pub
+known_hosts
+
+# --- Python ---
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+.venv/
+env/
+.env/
+build/
+dist/
+*.egg-info/
+.pytest_cache/
+.coverage
+htmlcov/
+
+# --- MetaTrader 5 (MT5) ---
+*.ex5
+*.set
+*.log
+MQL5/Logs/
+MQL5/Files/*.bin
+MQL5/Files/*.csv
+!MQL5/Files/README.md
+
+# --- IDE & OS ---
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
