@@ -1,0 +1,4 @@
+## 2025-02-28 - Preventive Infrastructure Hardening
+**Vulnerability:** Empty repository lacking source code had a basic `.gitignore` that did not protect against accidental commits of sensitive files (secrets, logs, `.env`, MT5 credentials).
+**Learning:** In early-stage or code-less repository states, security cannot rely on source code analysis alone. The risk of leaking secrets during initial setup is high when `.gitignore` only focuses on build tools (like MPS/Java).
+**Prevention:** Establish a robust baseline `.gitignore` early, tailored to the project's actual technologies (Python, MT5, Secrets) instead of only covering the scaffolded build tools. Always create temporary reproduction scripts (`reproduce_issue.sh`) to confirm vulnerabilities like git tracking before deploying a fix.

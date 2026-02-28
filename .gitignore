@@ -14,3 +14,38 @@ test_gen
 test_gen.caches
 TEST-*.xml
 junit*.properties
+
+# Security / Secrets
+.env
+.env.*
+*.key
+*.pem
+*.sqlite
+*.sqlite3
+config.ini
+api_key.txt
+credentials.json
+secrets.yml
+
+# MT5 Specific
+*.ex5
+*.set
+*.log
+MQL5/Files/
+MQL5/Logs/
+MQL5/Tester/
+
+# Python artifacts
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+env/
+.venv/
+.env/
+
+# IDE and OS
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
