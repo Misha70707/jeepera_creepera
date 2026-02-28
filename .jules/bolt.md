@@ -1,0 +1,3 @@
+## 2025-02-28 - [High-Performance Symbol Caching]
+**Learning:** Calling `SymbolInfoDouble` constantly in the critical `OnTick` path is a significant bottleneck. Dynamic symbol properties should be cached via a single `MqlTick` structure, and static properties (`Point`, `Digits`) should be cached once during initialization. In MQL5, `SymbolInfoInteger` requires a `long` parameter as the receiving variable to avoid reference type mismatch compilation errors.
+**Action:** Always implement a `CSymbolCache` class for symbol properties and use its `Update(MqlTick&)` method instead of native `SymbolInfoDouble()` to access prices like `Ask` or `Bid` inside tight event loops. Ensure `long` is used for integer properties.
