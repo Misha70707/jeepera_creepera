@@ -1,0 +1,4 @@
+## 2026-03-02 - Initial Repository Hardening
+**Vulnerability:** The project skeleton completely lacked secret management infrastructure and version control exclusions for sensitive files (`.env`, `*.key`), potentially leading to secret leakage upon initial development of API integrations or database connections.
+**Learning:** In early-stage or code-less repository states, security gaps are architectural rather than in code. Relying on default `.gitignore` configurations is insufficient for multi-environment (Python/MT5) algorithmic trading systems that handle financial data.
+**Prevention:** Implement strict, proactive version control exclusions (defense in depth) before any source code is written to ensure developers cannot accidentally commit secrets or environment-specific configuration files.
