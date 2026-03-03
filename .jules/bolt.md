@@ -1,0 +1,3 @@
+## 2025-03-03 - [MQL5 Symbol Properties caching]
+**Learning:** `SymbolInfoDouble` overhead is significant in tight loops or frequent `OnTick` calls. However, caching `TickValue` is a known anti-pattern for cross-currency pairs because it changes dynamically with conversion rates. Also, `SymbolInfoInteger` requires a `long` variable as the receiving parameter, otherwise it results in a compilation error due to reference type mismatch.
+**Action:** Implemented `CSymbolCache` to cache static properties like `Point` and `Digits` in `Init()` and dynamic properties like `Ask` and `Bid` via `Update(MqlTick&)`, deliberately excluding `TickValue`. Ensured variables passed to `SymbolInfoInteger` are explicitly typed as `long`.
