@@ -1,0 +1,4 @@
+## 2025-11-14 - Prevent Secret and Artifact Leakage
+**Vulnerability:** The repository lacked strict `.gitignore` configurations, exposing the project to the risk of accidentally committing sensitive data (secrets, API keys), Python artifacts, logs, IDE configurations, and MT5-specific files.
+**Learning:** In code-less or early-stage repositories, setting up preventive infrastructure hardening like strict `.gitignore` rules is critical. Without a solid foundation, developers could accidentally push sensitive environment files or unnecessary binary artifacts.
+**Prevention:** Implement comprehensive `.gitignore` rules covering a wide range of sensitive file patterns right from the start of the project before writing active source code. Always run verification scripts during setup to ensure the exclusions effectively prevent Git tracking.
