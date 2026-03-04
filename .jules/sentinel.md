@@ -1,0 +1,4 @@
+## 2024-05-24 - Missing Secret Prevention in Repo Initialization
+**Vulnerability:** The repository lacked basic gitignore rules for secrets (.env, keys), Python artifacts, logs, and IDE configurations, leading to a high risk of secret leakage via version control when developers inevitably introduce these files.
+**Learning:** The initial setup for the repository only focused on jetbrains MPS files while completely missing generic secret-prevention controls. Repositories without code still need preventive infrastructure hardening for secrets before development starts.
+**Prevention:** Always implement strict, comprehensive `.gitignore` files for expected technologies (Python, MT5) and generic secrets (.env, keys) at repository initialization, even before source code is added.
