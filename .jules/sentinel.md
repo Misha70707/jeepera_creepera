@@ -1,0 +1,4 @@
+## 2025-01-01 - Missing Strict Gitignore Rules for Secrets and App Artifacts
+**Vulnerability:** The repository lacked basic, strict exclusions for secrets (`.env`, `*.key`), Python artifacts (`venv/`, `__pycache__`), logs, IDE configurations, and MT5-specific files (`*.set`, `*.ex5`). This could lead to accidental commitment and leakage of sensitive data and API keys in the public repository.
+**Learning:** This architectural gap highlights that in early-stage repositories, basic security and Developer Experience (DX) hygiene elements (like `.gitignore`) are often missing and need to be implemented proactively as a preventative measure.
+**Prevention:** Establish comprehensive `.gitignore` rules during repository initialization to exclude secrets, environment files, local configurations, logs, and language-specific artifacts.
