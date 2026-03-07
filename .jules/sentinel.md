@@ -1,0 +1,4 @@
+## 2025-11-14 - Preventive Infrastructure Hardening
+**Vulnerability:** The `.gitignore` file lacked exclusions for critical secrets (like `.env`, `*.key`, `*.pem`), Python build artifacts, and MT5-specific files (`*.set`, `*.ex5`). This could lead to accidental commitment of sensitive data and API keys to version control.
+**Learning:** In code-less or early-stage repository states, the primary security focus must shift towards preventive infrastructure hardening. A strict `.gitignore` is the first line of defense against secret leakage, especially before any application logic exists to introduce typical vulnerabilities like XSS or SQL injection.
+**Prevention:** Establish comprehensive version control exclusions from the project's inception, specifically targeting environment files, keys, and framework-specific artifacts (Python, MT5) to prevent accidental credential exposure.
