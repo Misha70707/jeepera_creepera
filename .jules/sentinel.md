@@ -1,0 +1,5 @@
+## 2024-05-24 - Infrastructure Hardening
+
+**Vulnerability:** The project repository lacked strict `.gitignore` exclusions for sensitive files, such as secrets (`.env`, `*.key`), and technology-specific files (`venv/`, `*.ex5`).
+**Learning:** In very early-stage or skeleton projects where no source code exists yet, the primary focus shifts to preventive infrastructure hardening. This is crucial because standard vulnerability scanning may find nothing, yet misconfigurations like missing `.gitignore` rules can still expose the repository to risks as soon as development starts.
+**Prevention:** Implement comprehensive `.gitignore` files from the start. Add strict exclusion rules for secrets, IDE files, OS files, and specific artifact extensions based on the project technologies (e.g., Python artifacts, MT5 compiled files).
