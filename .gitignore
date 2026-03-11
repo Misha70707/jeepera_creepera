@@ -14,3 +14,37 @@ test_gen
 test_gen.caches
 TEST-*.xml
 junit*.properties
+
+# Sentinel: Infrastructure Security Hardening
+# Environment Variables & Secrets
+.env
+.env.*
+*.key
+*.pem
+*.p12
+*.pfx
+
+# Python / Machine Learning Artifacts
+venv/
+.venv/
+env/
+__pycache__/
+*.py[cod]
+*.so
+.ipynb_checkpoints/
+*.npy
+*.h5
+*.pb
+
+# Logs & Databases
+*.log
+*.sqlite
+*.db
+
+# IDE Configurations
+.idea/
+.vscode/
+
+# MT5 Specific Artifacts
+*.set
+*.ex5
