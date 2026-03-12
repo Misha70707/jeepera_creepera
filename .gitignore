@@ -14,3 +14,37 @@ test_gen
 test_gen.caches
 TEST-*.xml
 junit*.properties
+
+# Security and Secrets
+.env
+.env.*
+*.key
+*.pem
+secrets/
+credentials.json
+
+# Logs
+*.log
+logs/
+
+# Python Artifacts
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+.venv/
+env/
+.env_python/
+pip-log.txt
+pip-delete-this-directory.txt
+.pytest_cache/
+
+# IDE and OS files
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+
+# MT5 Specific Artifacts
+*.ex5
+*.set
