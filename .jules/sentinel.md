@@ -1,0 +1,4 @@
+## 2024-05-24 - Strengthened Gitignore to Prevent Secret Leakage
+**Vulnerability:** The repository lacked strict version control exclusions for secrets, configuration files, and artifacts. This could lead to accidental commitment of sensitive data like `.env` files, `.key` files, logs, and compiled assets.
+**Learning:** In projects that are in early stages or lack comprehensive source code for scanning, establishing preventive infrastructure hardening through strict `.gitignore` configurations is essential to prevent future secret leakage.
+**Prevention:** Always ensure standard and project-specific exclusion patterns are configured at the repository's inception to safeguard sensitive information from being pushed to version control.
