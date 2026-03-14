@@ -14,3 +14,33 @@ test_gen
 test_gen.caches
 TEST-*.xml
 junit*.properties
+
+# Sentinel: Security and Project Artifact Exclusions
+# Secrets & API Keys (CRITICAL)
+.env
+.env.*
+*.key
+*.pem
+secrets.json
+
+# Python & Environment Artifacts
+venv/
+env/
+.venv/
+__pycache__/
+*.py[cod]
+*.so
+
+# Logging (prevent info leakage)
+*.log
+logs/
+
+# IDE & Editor Configurations
+.idea/
+.vscode/
+*.swp
+
+# MT5 Specific Exclusions
+*.set
+*.ex5
+*.bin  # Ignore NN weights and states
