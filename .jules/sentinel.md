@@ -1,0 +1,4 @@
+## 2024-03-17 - MT5 Setting Files Leakage Risk
+**Vulnerability:** The repository lacked git exclusions for MT5 specific files, particularly `.set` files which can contain broker credentials and strategy parameters.
+**Learning:** MT5 Expert Advisor and Indicator configuration files (`.set`) often include sensitive inputs like account numbers, broker passwords, API keys, or proprietary strategy weights. These should never be version controlled as they are environment-specific and pose a critical secret leakage risk if committed.
+**Prevention:** Ensured `*.set` (along with compiled `*.ex4` and `*.ex5` binaries) are explicitly ignored in `.gitignore`. Always enforce strict `.gitignore` patterns for domain-specific credential carriers before writing application logic.
