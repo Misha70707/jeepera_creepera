@@ -1,0 +1,4 @@
+## 2024-03-23 - Gitignore Hardening for Secrets
+**Vulnerability:** The repository lacked strict `.gitignore` rules for common secret files (like `.env`, `*.key`, `*.pem`, `*.p12`). While no secrets were currently committed, this omission left the codebase highly vulnerable to accidental credential leakage in the future.
+**Learning:** In codebases where active source code vulnerabilities cannot be directly identified or accessed, infrastructure hardening (such as configuring version control exclusions) provides a crucial layer of preventive defense. The absence of basic secret exclusion rules is a fundamental architectural gap that needs to be addressed early in the project lifecycle.
+**Prevention:** Establish comprehensive `.gitignore` rules at project inception to automatically exclude environment variables, private keys, logs, and IDE configurations. Regularly audit these rules to ensure new types of sensitive files are also excluded.
