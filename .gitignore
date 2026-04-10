@@ -14,3 +14,27 @@ test_gen
 test_gen.caches
 TEST-*.xml
 junit*.properties
+
+# Secrets
+.env
+*.env
+*.key
+*.pem
+*.p12
+
+# Logs
+*.log
+
+# IDEs
+.idea/
+.vscode/
+
+# Python
+venv/
+__pycache__/
+*.py[cod]
+
+# MT5
+*.set
+*.ex4
+*.ex5
