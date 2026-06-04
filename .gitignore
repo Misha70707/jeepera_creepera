@@ -14,3 +14,19 @@ test_gen
 test_gen.caches
 TEST-*.xml
 junit*.properties
+
+# Security and project-specific exclusions
+.env
+*.env
+*.key
+*.pem
+*.p12
+venv/
+__pycache__/
+*.py[cod]
+*.log
+.idea/
+.vscode/
+*.set
+*.ex4
+*.ex5
